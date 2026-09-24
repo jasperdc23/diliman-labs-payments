@@ -1,7 +1,7 @@
 import { Kbd } from "@/components/ui/kbd";
 import { DocPage, DocSection, Example, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Kbd — EP Design Kit" };
+export const metadata = { title: "Kbd — Diliman Labs" };
 
 export default function KbdDocs() {
   return (

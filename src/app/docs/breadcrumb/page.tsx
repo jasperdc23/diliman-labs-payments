@@ -1,7 +1,7 @@
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { DocPage, DocSection, Example, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Breadcrumb — EP Design Kit" };
+export const metadata = { title: "Breadcrumb — Diliman Labs" };
 
 export default function BreadcrumbDocs() {
   return (

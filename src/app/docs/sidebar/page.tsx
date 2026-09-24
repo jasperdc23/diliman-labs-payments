@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowsLeftRight, Gear, House, Receipt, Storefront } from "@p
 import { Sidebar } from "@/components/ui/sidebar";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Sidebar — EP Design Kit" };
+export const metadata = { title: "Sidebar — Diliman Labs" };
 
 const items = [
   { key: "overview", label: "Overview", icon: <House size={18} /> },

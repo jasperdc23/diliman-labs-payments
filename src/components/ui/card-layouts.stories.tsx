@@ -18,9 +18,9 @@ const swatch = (from: string, to: string) =>
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${from}"/><stop offset="100%" stop-color="${to}"/></linearGradient></defs><rect width="320" height="200" fill="url(#g)"/><circle cx="252" cy="48" r="44" fill="rgba(255,255,255,0.18)"/><circle cx="60" cy="172" r="72" fill="rgba(0,0,0,0.12)"/></svg>`,
   )}`;
 
-const terminal = swatch("#6955ed", "#2f9e44");
-const signage = swatch("#1d3f8a", "#e03131");
-const wallet = swatch("#f08c00", "#6955ed");
+const terminal = swatch("#3a3a2e", "#0d0e10");
+const signage = swatch("#4a4636", "#141618");
+const wallet = swatch("#35352b", "#0d0e10");
 
 const meta: Meta = {
   title: "Patterns/Card Layouts",
@@ -83,7 +83,7 @@ export const ListLayout: Story = {
           href="#txn-2"
         />
         <ListRow
-          leading={<QrCode size={18} weight="regular" className="text-accent" />}
+          leading={<QrCode size={18} weight="regular" className="text-accent-text" />}
           title="QR Ph collection · Store 12"
           subtitle="26 Aug 2026 · 11:48"
           trailing={<span className="tabular-nums">+₱1,234.56</span>}

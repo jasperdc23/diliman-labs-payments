@@ -1,9 +1,27 @@
-# EP Design Kit
+# Diliman Labs Payments
 
-A UI foundation for your product — design tokens, components, and the standards that
-hold them together. **Monochrome by decision, not by omission:** a placeholder
-brand color makes unsettled decisions look settled, so there isn't one. Adding
-your brand is a four-value token edit.
+Payments monitoring and management. Forked from a brandless design kit, with the
+Diliman Labs brand applied through tokens.
+
+The dashboard lives at `/dashboard`. `/docs` is the inherited component
+documentation, kept as a working reference for what's available to build with.
+
+## Brand
+
+| Element     | Value                                                                    |
+| ----------- | ------------------------------------------------------------------------ |
+| Accent      | `#f7ec30` — filled surfaces only; needs ink text on top                  |
+| Ink         | `#141618` — `--gray-950`, the base for dark surfaces                     |
+| Accent text | Darkened accent in light mode, pure yellow in dark — see `--accent-text` |
+| Type        | Roboto 300/400/500/600/700/900, Roboto Mono for code                     |
+| Logo        | `public/brand/` — ink variant plus a white variant for dark surfaces     |
+| Imagery     | Dark, high-contrast, grainy; yellow as blocking, never a tint            |
+
+Yellow is bright enough that it can't carry text or thin strokes on a light
+surface (~1.3:1 against white). So `--accent` is for filled backgrounds, and
+`--accent-text` is the token for anything drawn as text, an icon, a focus ring,
+or a hairline — it darkens the same hue in light mode and resolves back to pure
+yellow in dark mode.
 
 ## Run it
 

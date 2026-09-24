@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import {
-  ArrowLeft,
   Bell,
   ChartLineUp,
   Gear,
@@ -12,6 +10,8 @@ import {
   Receipt,
   Storefront,
   ArrowsLeftRight,
+  List,
+  X,
 } from "@phosphor-icons/react/ssr";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/ui/stat-card";
@@ -23,6 +23,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Tabs } from "@/components/ui/tabs";
 import { SearchBar } from "@/components/ui/search-bar";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { BrandMark } from "@/components/brand-mark";
 
 type Transaction = {
   id: string;
@@ -113,6 +114,7 @@ const navItems: { key: NavItemKey; label: string; icon: typeof House }[] = [
 export default function DashboardExample() {
   const [activeNav, setActiveNav] = useState<NavItemKey>("overview");
   const [view, setView] = useState("overview");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen w-full">
@@ -121,21 +123,8 @@ export default function DashboardExample() {
         className="glass-flat hidden shrink-0 flex-col border-r md:flex"
         style={{ width: "16rem", padding: "var(--space-6) var(--space-4)", gap: "var(--space-6)" }}
       >
-        <div className="flex items-center" style={{ gap: "var(--space-2)", paddingInline: "var(--space-2)" }}>
-          <span
-            className="flex items-center justify-center font-semibold text-text-on-accent"
-            style={{
-              width: "var(--space-8)",
-              height: "var(--space-8)",
-              borderRadius: "var(--radius-md)",
-              background: "var(--accent)",
-              fontSize: "var(--text-sm)",
-            }}
-            aria-hidden="true"
-          >
-            E
-          </span>
-          <span className="text-sm font-semibold tracking-tight text-text-primary">EP</span>
+        <div className="flex items-center" style={{ paddingInline: "var(--space-2)" }}>
+          <BrandMark height={22} />
         </div>
 
         <nav className="flex flex-col" style={{ gap: "var(--space-1)" }} aria-label="Primary">
@@ -154,7 +143,10 @@ export default function DashboardExample() {
                   padding: "var(--space-2) var(--space-3)",
                   fontSize: "var(--text-sm)",
                   color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                  background: isActive ? "var(--surface-sunken)" : "transparent",
+                  background: isActive ? "var(--accent-subtle)" : "transparent",
+                  // Brand edge on the active item: the accent can't carry the
+                  // label color at this size, but it can mark the row.
+                  boxShadow: isActive ? "inset 3px 0 0 0 var(--accent)" : "none",
                 }}
               >
                 <Icon size={18} weight={isActive ? "fill" : "regular"} aria-hidden="true" />
@@ -164,16 +156,6 @@ export default function DashboardExample() {
           })}
         </nav>
 
-        <div className="mt-auto flex flex-col" style={{ gap: "var(--space-2)" }}>
-          <Link
-            href="/examples"
-            className="flex items-center rounded-md font-medium text-text-tertiary transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-text-primary"
-            style={{ gap: "var(--space-2)", padding: "var(--space-2) var(--space-3)", fontSize: "var(--text-sm)" }}
-          >
-            <ArrowLeft size={16} weight="regular" aria-hidden="true" />
-            Back to examples
-          </Link>
-        </div>
       </aside>
 
       {/* Main column */}
@@ -184,13 +166,19 @@ export default function DashboardExample() {
           style={{ padding: "var(--space-4) var(--space-6)", gap: "var(--space-4)" }}
         >
           <div className="flex flex-1 items-center" style={{ gap: "var(--space-4)" }}>
-            <Link
-              href="/examples"
-              aria-label="Back to examples"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-text-secondary transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:bg-surface-sunken hover:text-text-primary md:hidden"
+            <button
+              type="button"
+              aria-label="Open navigation"
+              aria-expanded={mobileNavOpen}
+              onClick={() => setMobileNavOpen((v) => !v)}
+              className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-text-secondary transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:bg-surface-sunken hover:text-text-primary md:hidden"
             >
-              <ArrowLeft size={18} weight="regular" aria-hidden="true" />
-            </Link>
+              {mobileNavOpen ? (
+                <X size={18} weight="regular" aria-hidden="true" />
+              ) : (
+                <List size={18} weight="regular" aria-hidden="true" />
+              )}
+            </button>
             <h1 className="hidden font-semibold text-text-primary sm:block" style={{ fontSize: "var(--text-lg)" }}>
               Overview
             </h1>
@@ -211,6 +199,44 @@ export default function DashboardExample() {
             <Avatar name="Jasper Caparas" size="sm" status="online" />
           </div>
         </header>
+
+        {/* Mobile nav — the sidebar is md-and-up only, so without this the
+            dashboard has no navigation at all on a phone. */}
+        {mobileNavOpen && (
+          <nav
+            className="glass flex flex-col border-b md:hidden"
+            style={{ padding: "var(--space-2)", gap: "var(--space-1)" }}
+            aria-label="Primary"
+          >
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeNav === item.key;
+              return (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={() => {
+                    setActiveNav(item.key);
+                    setMobileNavOpen(false);
+                  }}
+                  aria-current={isActive ? "page" : undefined}
+                  className="flex w-full cursor-pointer items-center rounded-md text-left font-medium"
+                  style={{
+                    gap: "var(--space-3)",
+                    padding: "var(--space-2) var(--space-3)",
+                    fontSize: "var(--text-sm)",
+                    color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                    background: isActive ? "var(--accent-subtle)" : "transparent",
+                    boxShadow: isActive ? "inset 3px 0 0 0 var(--accent)" : "none",
+                  }}
+                >
+                  <Icon size={18} weight={isActive ? "fill" : "regular"} aria-hidden="true" />
+                  {item.label}
+                </button>
+              );
+            })}
+          </nav>
+        )}
 
         <main className="flex flex-1 flex-col" style={{ padding: "var(--space-6)", gap: "var(--space-6)" }}>
           {/* Stat row */}
@@ -267,7 +293,7 @@ export default function DashboardExample() {
                       </p>
                     </div>
                     <span
-                      className="flex shrink-0 items-center justify-center bg-accent-subtle text-accent"
+                      className="flex shrink-0 items-center justify-center bg-accent-subtle text-accent-text"
                       style={{ width: "var(--space-8)", height: "var(--space-8)", borderRadius: "var(--radius-md)" }}
                       aria-hidden="true"
                     >
@@ -299,13 +325,17 @@ export default function DashboardExample() {
                   <h2 className="font-semibold text-text-primary" style={{ fontSize: "var(--text-base)" }}>
                     Recent transactions
                   </h2>
-                  <Link
-                    href="/examples/dashboard"
-                    className="font-medium text-accent transition-opacity duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:opacity-70"
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveNav("transactions");
+                      setView("transactions");
+                    }}
+                    className="cursor-pointer font-medium text-accent-text transition-opacity duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:opacity-70"
                     style={{ fontSize: "var(--text-sm)" }}
                   >
                     View all
-                  </Link>
+                  </button>
                 </div>
                 <div style={{ padding: "0 var(--space-2) var(--space-2)" }}>
                   <Table

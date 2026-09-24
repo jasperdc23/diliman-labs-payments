@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Typography — EP Design Kit" };
+export const metadata = { title: "Typography — Diliman Labs" };
 
 const SCALE = [
   { token: "--text-5xl", value: "3rem", px: "48px", use: "Marketing headline. Once per page, if at all." },

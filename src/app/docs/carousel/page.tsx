@@ -1,7 +1,7 @@
 import { Carousel } from "@/components/ui/carousel";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Carousel — EP Design Kit" };
+export const metadata = { title: "Carousel — Diliman Labs" };
 
 function PlaceholderSlide({ label }: { label: string }) {
   return (

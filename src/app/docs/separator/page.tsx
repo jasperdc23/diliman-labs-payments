@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { DocPage, DocSection, Example, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Separator — EP Design Kit" };
+export const metadata = { title: "Separator — Diliman Labs" };
 
 export default function SeparatorDocs() {
   return (

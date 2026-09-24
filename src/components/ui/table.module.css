@@ -113,7 +113,7 @@
 }
 
 .sortButton[data-active="true"] .sortIcon {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .empty td {

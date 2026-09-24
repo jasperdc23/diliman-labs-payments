@@ -1,7 +1,7 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Aspect Ratio — EP Design Kit" };
+export const metadata = { title: "Aspect Ratio — Diliman Labs" };
 
 function Filled() {
   return (

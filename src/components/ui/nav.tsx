@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { List, X } from "@phosphor-icons/react/ssr";
 import { ThemeToggle } from "../theme-toggle";
+import { BrandMark } from "../brand-mark";
 
 const links = [
   { label: "Docs", href: "/docs" },
@@ -33,8 +34,8 @@ export function Nav() {
   return (
     <div className="sticky top-0 z-50 w-full">
       <div className="glass flex items-center justify-between border-b px-4 py-3 sm:px-6 lg:px-8 xl:px-16">
-        <Link href="/" className="text-sm font-semibold tracking-tight text-text-primary">
-          EP
+        <Link href="/" aria-label="Diliman Labs home" className="flex items-center">
+          <BrandMark height={20} />
         </Link>
 
         <nav className="hidden items-center gap-6 sm:flex" aria-label="Primary">

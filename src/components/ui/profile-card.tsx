@@ -60,7 +60,7 @@ export function ProfileCard({
         ) : (
           <span
             aria-hidden="true"
-            className="bg-accent-subtle text-accent flex shrink-0 items-center justify-center font-semibold"
+            className="bg-accent-subtle text-accent-text flex shrink-0 items-center justify-center font-semibold"
             style={{
               width: "var(--space-12)",
               height: "var(--space-12)",

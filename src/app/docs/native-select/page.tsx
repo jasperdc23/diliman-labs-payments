@@ -1,7 +1,7 @@
 import { NativeSelect, type NativeSelectOption } from "@/components/ui/native-select";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Native Select — EP Design Kit" };
+export const metadata = { title: "Native Select — Diliman Labs" };
 
 const rails: NativeSelectOption[] = [
   { value: "instapay", label: "InstaPay" },

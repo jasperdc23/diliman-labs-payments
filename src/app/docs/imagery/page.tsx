@@ -2,7 +2,7 @@ import Link from "next/link";
 import { MediaCard } from "@/components/ui/media-card";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Imagery — EP Design Kit" };
+export const metadata = { title: "Imagery — Diliman Labs" };
 
 const RATIOS = [
   { ratio: "1 / 1", label: "1:1", use: "Avatars, thumbnails, logo marks." },
@@ -35,18 +35,33 @@ export default function ImageryDocs() {
   return (
     <DocPage
       title="Imagery"
-      description="The kit has no real photography yet, on purpose. This page documents the token-based placeholder that stands in for it today, and the rules any real photo will need to follow once one lands."
+      description="Photography runs dark, high-contrast and grainy, with the brand yellow used as graphic blocking rather than as a tint. No real photos have been shot yet — this page documents the direction, the grade every photo inherits automatically, and the placeholder that stands in until then."
     >
       <DocSection
+        title="Photo direction"
+        description="The spec any shot or sourced image needs to meet."
+      >
+        <Note>
+          Dark tone, pushed contrast, visible grain. Subjects sit against near-black under a single
+          hard light source rather than an evenly lit scene. The yellow never washes over the whole
+          frame — it enters as a block, a wedge, a rule, or type sitting on top of the image, which
+          is what keeps it reading as the brand instead of as a color filter. Anything passed to a
+          photo slot is graded automatically (desaturated, contrast pushed, darkened) and gets the
+          vignette and grain pass on top, so a shot that arrives slightly off-spec still lands in
+          the same family as everything around it.
+        </Note>
+      </DocSection>
+
+      <DocSection
         title="Why there's no real photography yet"
-        description="Same reasoning as the color system: a placeholder photo makes an unsettled decision look settled."
+        description="Same reasoning as the color system: a stand-in photo makes an unsettled decision look settled."
       >
         <Note>
           A stock photo dropped in to fill space quietly becomes the brand&apos;s photography style by
           accident — nobody chose that lighting, that crop, or that cast of people, but it ships
           anyway because it&apos;s already there. So instead of a stand-in image, components that
-          take a photo render a placeholder built entirely from existing color and surface tokens.
-          It never looks like a broken image, and it never gets mistaken for a decision.
+          take a photo render a placeholder built from the brand&apos;s own ink and accent. It never
+          looks like a broken image, and it never gets mistaken for a real shot.
         </Note>
       </DocSection>
 

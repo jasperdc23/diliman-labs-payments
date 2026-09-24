@@ -2,15 +2,15 @@ import { Button } from "@/components/ui/button";
 import { MediaCard } from "@/components/ui/media-card";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Media card — EP Design Kit" };
+export const metadata = { title: "Media card — Diliman Labs" };
 
 const swatch = (from: string, to: string) =>
   `data:image/svg+xml,${encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${from}"/><stop offset="100%" stop-color="${to}"/></linearGradient></defs><rect width="320" height="200" fill="url(#g)"/><circle cx="252" cy="48" r="44" fill="rgba(255,255,255,0.18)"/><circle cx="60" cy="172" r="72" fill="rgba(0,0,0,0.12)"/></svg>`,
   )}`;
 
-const terminalPhoto = swatch("#495057", "#16181b");
-const signagePhoto = swatch("#868e96", "#343a40");
+const terminalPhoto = swatch("#3a3a2e", "#0d0e10");
+const signagePhoto = swatch("#4a4636", "#141618");
 
 export default function MediaCardDocs() {
   return (

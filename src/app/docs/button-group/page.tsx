@@ -3,7 +3,7 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { Button } from "@/components/ui/button";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Button Group — EP Design Kit" };
+export const metadata = { title: "Button Group — Diliman Labs" };
 
 export default function ButtonGroupDocs() {
   return (

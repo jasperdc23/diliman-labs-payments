@@ -1,7 +1,7 @@
 import { Textarea } from "@/components/ui/textarea";
 import { DocPage, DocSection, Example, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Textarea — EP Design Kit" };
+export const metadata = { title: "Textarea — Diliman Labs" };
 
 export default function TextareaDocs() {
   return (

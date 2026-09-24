@@ -2,7 +2,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Field — EP Design Kit" };
+export const metadata = { title: "Field — Diliman Labs" };
 
 export default function FieldDocs() {
   return (

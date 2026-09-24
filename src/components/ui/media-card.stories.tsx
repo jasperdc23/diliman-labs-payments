@@ -7,8 +7,8 @@ const swatch = (from: string, to: string) =>
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${from}"/><stop offset="100%" stop-color="${to}"/></linearGradient></defs><rect width="320" height="200" fill="url(#g)"/><circle cx="248" cy="52" r="46" fill="rgba(255,255,255,0.18)"/><circle cx="64" cy="168" r="70" fill="rgba(0,0,0,0.12)"/></svg>`,
   )}`;
 
-const terminalPhoto = swatch("#6955ed", "#2f9e44");
-const qrPhoto = swatch("#1d3f8a", "#e03131");
+const terminalPhoto = swatch("#3a3a2e", "#0d0e10");
+const qrPhoto = swatch("#4a4636", "#141618");
 
 const meta: Meta<typeof MediaCard> = {
   title: "Components/MediaCard",

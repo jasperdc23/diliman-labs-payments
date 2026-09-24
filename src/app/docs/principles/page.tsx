@@ -1,6 +1,6 @@
 import { DocPage, DocSection, Note } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Design principles — EP Design Kit" };
+export const metadata = { title: "Design principles — Diliman Labs" };
 
 const rules = [
   {

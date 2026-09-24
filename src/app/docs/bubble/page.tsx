@@ -1,7 +1,7 @@
 import { Bubble } from "@/components/ui/bubble";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Bubble — EP Design Kit" };
+export const metadata = { title: "Bubble — Diliman Labs" };
 
 export default function BubbleDocs() {
   return (

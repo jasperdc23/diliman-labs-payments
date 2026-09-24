@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Skeleton — EP Design Kit" };
+export const metadata = { title: "Skeleton — Diliman Labs" };
 
 export default function SkeletonDocs() {
   return (

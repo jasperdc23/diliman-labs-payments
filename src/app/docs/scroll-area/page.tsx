@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DocPage, DocSection, Example, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Scroll Area — EP Design Kit" };
+export const metadata = { title: "Scroll Area — Diliman Labs" };
 
 const merchants = [
   "Bayani Mart",

@@ -1,7 +1,7 @@
 import { Collapsible } from "@/components/ui/collapsible";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Collapsible — EP Design Kit" };
+export const metadata = { title: "Collapsible — Diliman Labs" };
 
 export default function CollapsibleDocs() {
   return (

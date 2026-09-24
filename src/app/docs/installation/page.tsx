@@ -1,7 +1,7 @@
 import { DocPage, DocSection, Note } from "@/components/docs/doc-parts";
 import { CodeBlock } from "@/components/docs/code-block";
 
-export const metadata = { title: "Installation — EP Design Kit" };
+export const metadata = { title: "Installation — Diliman Labs" };
 
 export default function InstallationDocs() {
   return (
@@ -11,8 +11,8 @@ export default function InstallationDocs() {
     >
       <DocSection title="Clone and run">
         <CodeBlock
-          code={`git clone https://github.com/jasperdc23/ep-design-repo-kit.git
-cd ep-design-repo-kit
+          code={`git clone https://github.com/jasperdc23/diliman-labs-payments.git
+cd diliman-labs-payments
 npm install
 npm run dev`}
         />

@@ -68,7 +68,7 @@ export function StatCard({
         </div>
         {icon ? (
           <span
-            className="bg-accent-subtle text-accent flex shrink-0 items-center justify-center"
+            className="bg-accent-subtle text-accent-text flex shrink-0 items-center justify-center"
             style={{
               width: "var(--space-8)",
               height: "var(--space-8)",

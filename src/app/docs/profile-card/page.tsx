@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ProfileCard } from "@/components/ui/profile-card";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Profile card — EP Design Kit" };
+export const metadata = { title: "Profile card — Diliman Labs" };
 
 const portrait = `data:image/svg+xml,${encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="#343a40"/><circle cx="48" cy="38" r="17" fill="rgba(255,255,255,0.85)"/><circle cx="48" cy="92" r="30" fill="rgba(255,255,255,0.85)"/></svg>`,

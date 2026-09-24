@@ -1,7 +1,7 @@
 import { DocPage, DocSection, Note } from "@/components/docs/doc-parts";
 import { CodeBlock } from "@/components/docs/code-block";
 
-export const metadata = { title: "Motion — EP Design Kit" };
+export const metadata = { title: "Motion — Diliman Labs" };
 
 const durations = [
   ["--duration-instant", "80ms", "Press and active feedback"],

@@ -1,6 +1,6 @@
 import { DocPage, DocSection, Note } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Spacing — EP Design Kit" };
+export const metadata = { title: "Spacing — Diliman Labs" };
 
 const scale = [
   ["--space-1", "0.25rem", "Icon-to-label gaps, tight inline spacing"],

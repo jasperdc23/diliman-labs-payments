@@ -1,7 +1,7 @@
 import { Avatar, AvatarGroup } from "@/components/ui/avatar";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Avatar — EP Design Kit" };
+export const metadata = { title: "Avatar — Diliman Labs" };
 
 const portrait =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Crect width='96' height='96' fill='%23495057'/%3E%3Ccircle cx='48' cy='38' r='16' fill='%23ffffff' opacity='0.9'/%3E%3Cellipse cx='48' cy='82' rx='26' ry='20' fill='%23ffffff' opacity='0.9'/%3E%3C/svg%3E";

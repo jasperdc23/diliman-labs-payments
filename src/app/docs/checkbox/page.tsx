@@ -1,7 +1,7 @@
 import { Checkbox, CheckboxGroup } from "@/components/ui/checkbox";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Checkbox — EP Design Kit" };
+export const metadata = { title: "Checkbox — Diliman Labs" };
 
 export default function CheckboxDocs() {
   return (

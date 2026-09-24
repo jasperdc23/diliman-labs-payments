@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Heading, Lead, Muted, Text } from "@/components/ui/typography";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Typography components — EP Design Kit" };
+export const metadata = { title: "Typography components — Diliman Labs" };
 
 export default function TypographyComponentsDocs() {
   return (

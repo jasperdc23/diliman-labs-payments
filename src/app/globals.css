@@ -15,6 +15,7 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-subtle: var(--accent-subtle);
+  --color-accent-text: var(--accent-text);
   --color-success: var(--success);
   --color-success-subtle: var(--success-subtle);
   --color-warning: var(--warning);
@@ -114,6 +115,49 @@ body {
   opacity: var(--grain-opacity);
   mix-blend-mode: overlay;
   pointer-events: none;
+}
+
+/* Brand photo treatment — dark, high-contrast, heavily grained, with the
+   brand yellow pushed into what's left of the highlights. Applied as a
+   sibling overlay rather than on the image itself: `filter` would cascade
+   into these pseudo-elements and desaturate the yellow along with the
+   photo. The grade itself (grayscale/contrast/brightness) lives on the
+   image layer; this is only the duotone + grain pass that sits on top. */
+.photo-treatment {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+/* Vignette, not a tint. A flat brand-color wash over the whole frame turns
+   any photo to mud — the brand reads as black-dominant with yellow used as
+   graphic blocking on top, so the treatment's job here is only to deepen
+   the frame and let whatever sits above it (type, a wedge, a button) carry
+   the color. */
+.photo-treatment::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 100% at 50% 0%,
+    transparent 35%,
+    color-mix(in srgb, var(--gray-1000) 55%, transparent) 100%
+  );
+}
+
+/* Heavier than the page-level grain — a photo carries texture that would
+   read as dirt on a UI surface. Capped well below where `overlay` starts
+   lifting the blacks into gray fog, which is what kills the contrast the
+   brand depends on. */
+.photo-treatment::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain-texture);
+  background-size: 150px 150px;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
 }
 
 /* Consistent, visible focus ring everywhere instead of relying on each

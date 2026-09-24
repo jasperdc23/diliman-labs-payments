@@ -1,7 +1,7 @@
 import { DocPage, DocSection, Note } from "@/components/docs/doc-parts";
 import { CodeBlock } from "@/components/docs/code-block";
 
-export const metadata = { title: "Theming — EP Design Kit" };
+export const metadata = { title: "Theming — Diliman Labs" };
 
 export default function ThemingDocs() {
   return (

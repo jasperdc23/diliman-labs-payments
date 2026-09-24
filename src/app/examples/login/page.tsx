@@ -3,10 +3,11 @@ import Link from "next/link";
 import { Card, CardFooter } from "@/components/ui/card";
 import { LoginForm } from "./login-form";
 import { BackLink } from "../_components/back-link";
+import { BrandMark } from "@/components/brand-mark";
 
 export const metadata: Metadata = {
-  title: "Log in — EP Design Kit",
-  description: "Example login screen built from EP components.",
+  title: "Log in — Diliman Labs",
+  description: "Example login screen built from Diliman Labs components.",
 };
 
 export default function LoginPage() {
@@ -16,9 +17,7 @@ export default function LoginPage() {
 
       <div className="flex w-full max-w-sm flex-col gap-8">
         <div className="flex flex-col items-center gap-4 text-center">
-          <span className="text-sm font-semibold tracking-tight text-text-primary">
-            EP
-          </span>
+          <BrandMark height={28} />
           <div className="flex flex-col gap-1">
             <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
               Welcome back
@@ -37,7 +36,7 @@ export default function LoginPage() {
               Don&apos;t have an account?{" "}
               <Link
                 href="/examples/signup"
-                className="font-medium text-text-primary transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-accent"
+                className="font-medium text-text-primary transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-accent-text"
               >
                 Sign up
               </Link>

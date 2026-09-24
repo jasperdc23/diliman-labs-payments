@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Glass panel — EP Design Kit" };
+export const metadata = { title: "Glass panel — Diliman Labs" };
 
 function PageBackdrop({ children }: { children: ReactNode }) {
   return (

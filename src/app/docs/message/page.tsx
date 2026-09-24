@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Message } from "@/components/ui/message";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Message — EP Design Kit" };
+export const metadata = { title: "Message — Diliman Labs" };
 
 export default function MessageDocs() {
   return (

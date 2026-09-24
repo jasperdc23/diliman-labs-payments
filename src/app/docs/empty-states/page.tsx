@@ -4,7 +4,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Card } from "@/components/ui/card";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Empty states — EP Design Kit" };
+export const metadata = { title: "Empty states — Diliman Labs" };
 
 export default function EmptyStatesDocs() {
   return (

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { DocPage, DocSection, Note } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Overview — EP Design Kit" };
+export const metadata = { title: "Overview — Diliman Labs" };
 
 const structure = [
   ["src/styles/tokens.css", "Every design token. The single source of truth."],

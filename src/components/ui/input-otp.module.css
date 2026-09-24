@@ -33,7 +33,7 @@
 }
 
 .slot:focus-visible {
-  border-color: var(--accent);
+  border-color: var(--accent-text);
   box-shadow: 0 0 0 var(--focus-ring-width) color-mix(in srgb, var(--focus-ring-color) 30%, transparent);
 }
 

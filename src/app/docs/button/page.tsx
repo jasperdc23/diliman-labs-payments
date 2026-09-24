@@ -2,7 +2,7 @@ import { ArrowRight, Plus, Trash } from "@phosphor-icons/react/ssr";
 import { Button } from "@/components/ui/button";
 import { DocPage, DocSection, Example, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Button — EP Design Kit" };
+export const metadata = { title: "Button — Diliman Labs" };
 
 export default function ButtonDocs() {
   return (

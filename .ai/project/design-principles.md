@@ -1,4 +1,4 @@
-# Design principles — EP Design Kit
+# Design principles — Diliman Labs
 
 This repo is a UI design kit, not a typical app — read/write here is almost
 entirely UI/UX work. These rules exist to keep that work from drifting into

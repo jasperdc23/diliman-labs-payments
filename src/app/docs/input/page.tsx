@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Input — EP Design Kit" };
+export const metadata = { title: "Input — Diliman Labs" };
 
 export default function InputDocs() {
   return (

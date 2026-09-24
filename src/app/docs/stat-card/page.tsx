@@ -3,7 +3,7 @@ import { ArrowsLeftRight, Receipt, Wallet } from "@phosphor-icons/react/ssr";
 import { StatCard } from "@/components/ui/stat-card";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Stat card — EP Design Kit" };
+export const metadata = { title: "Stat card — Diliman Labs" };
 
 export default function StatCardDocs() {
   return (

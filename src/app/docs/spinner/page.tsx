@@ -1,7 +1,7 @@
 import { Spinner } from "@/components/ui/spinner";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Spinner — EP Design Kit" };
+export const metadata = { title: "Spinner — Diliman Labs" };
 
 export default function SpinnerDocs() {
   return (

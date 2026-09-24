@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Texture — EP Design Kit" };
+export const metadata = { title: "Texture — Diliman Labs" };
 
 const MESH_STOPS = [
   { token: "--mesh-1", role: "Top-left wash. The accent's own hue once a brand color lands." },

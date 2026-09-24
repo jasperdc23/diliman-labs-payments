@@ -1,7 +1,7 @@
 import { Switch } from "@/components/ui/switch";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Switch — EP Design Kit" };
+export const metadata = { title: "Switch — Diliman Labs" };
 
 export default function SwitchDocs() {
   return (

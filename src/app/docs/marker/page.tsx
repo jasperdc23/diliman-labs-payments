@@ -1,7 +1,7 @@
 import { Marker } from "@/components/ui/marker";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Marker — EP Design Kit" };
+export const metadata = { title: "Marker — Diliman Labs" };
 
 export default function MarkerDocs() {
   return (

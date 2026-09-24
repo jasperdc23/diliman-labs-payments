@@ -2,7 +2,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Label — EP Design Kit" };
+export const metadata = { title: "Label — Diliman Labs" };
 
 export default function LabelDocs() {
   return (

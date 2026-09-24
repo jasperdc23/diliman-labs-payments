@@ -2,7 +2,7 @@ import { TextB, TextItalic, TextUnderline } from "@phosphor-icons/react/ssr";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Toggle group — EP Design Kit" };
+export const metadata = { title: "Toggle group — Diliman Labs" };
 
 export default function ToggleGroupDocs() {
   return (

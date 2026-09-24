@@ -53,7 +53,7 @@ export function FilterBar({
         <button
           type="button"
           onClick={onClearAll}
-          className="rounded-md font-medium text-accent transition-opacity duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:opacity-70"
+          className="rounded-md font-medium text-accent-text transition-opacity duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:opacity-70"
           style={{ fontSize: "var(--text-sm)", padding: "var(--space-1) var(--space-2)" }}
         >
           Clear all

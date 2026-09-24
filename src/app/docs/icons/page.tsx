@@ -11,7 +11,7 @@ import {
 import { DocPage, DocSection, Note } from "@/components/docs/doc-parts";
 import { CodeBlock } from "@/components/docs/code-block";
 
-export const metadata = { title: "Icons — EP Design Kit" };
+export const metadata = { title: "Icons — Diliman Labs" };
 
 const samples = [House, Gear, User, Bell, MagnifyingGlass, CreditCard, ArrowsLeftRight, Receipt];
 

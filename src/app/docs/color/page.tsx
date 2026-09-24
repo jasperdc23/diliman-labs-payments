@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { DocPage, DocSection, Note } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Color — EP Design Kit" };
+export const metadata = { title: "Color — Diliman Labs" };
 
 const semantic = [
   ["--surface", "The page plane."],

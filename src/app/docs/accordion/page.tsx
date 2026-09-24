@@ -1,7 +1,7 @@
 import { Accordion } from "@/components/ui/accordion";
 import { DocPage, DocSection, Example, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Accordion — EP Design Kit" };
+export const metadata = { title: "Accordion — Diliman Labs" };
 
 function Content({ text }: { text: string }) {
   return (

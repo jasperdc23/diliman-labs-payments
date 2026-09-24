@@ -2,7 +2,7 @@ import { Star } from "@phosphor-icons/react/ssr";
 import { Toggle } from "@/components/ui/toggle";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Toggle — EP Design Kit" };
+export const metadata = { title: "Toggle — Diliman Labs" };
 
 export default function ToggleDocs() {
   return (

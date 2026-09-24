@@ -1,6 +1,6 @@
 import { DocPage, DocSection, Note } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Radius — EP Design Kit" };
+export const metadata = { title: "Radius — Diliman Labs" };
 
 const scale = [
   ["--radius-sm", "0.25rem", "Checkboxes, small tags, inline chips"],

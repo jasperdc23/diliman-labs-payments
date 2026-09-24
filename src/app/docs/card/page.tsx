@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardBody, CardFooter } from "@/components/ui/card";
 import { DocPage, DocSection, Example, Note, PropsTable } from "@/components/docs/doc-parts";
 
-export const metadata = { title: "Card — EP Design Kit" };
+export const metadata = { title: "Card — Diliman Labs" };
 
 export default function CardDocs() {
   return (

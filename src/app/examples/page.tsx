@@ -5,8 +5,8 @@ import { Card, CardTitle, CardBody } from "@/components/ui/card";
 import { BackLink } from "./_components/back-link";
 
 export const metadata: Metadata = {
-  title: "Examples — EP Design Kit",
-  description: "Sample applications built entirely from EP components.",
+  title: "Examples — Diliman Labs",
+  description: "Sample applications built entirely from Diliman Labs components.",
 };
 
 const examples = [
@@ -21,7 +21,7 @@ const examples = [
     description: "A new-account form with a terms acknowledgment, showing Checkbox alongside the same auth layout.",
   },
   {
-    href: "/examples/dashboard",
+    href: "/dashboard",
     title: "Dashboard",
     description: "An operations dashboard for monitoring transaction volume, with charts, a sortable ledger, and a real app shell.",
   },

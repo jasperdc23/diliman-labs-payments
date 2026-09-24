@@ -31,7 +31,7 @@ export default function Home() {
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-24 px-6 pt-24 pb-24 sm:px-10">
         <section className="flex flex-col gap-6">
           <p className="font-mono text-xs tracking-widest text-text-tertiary uppercase">
-            EP Design Kit
+            Diliman Labs
           </p>
           <h1 className="max-w-3xl text-4xl leading-tight font-semibold tracking-tight text-balance text-text-primary sm:text-5xl">
             A UI foundation that&apos;s ready for a brand, not waiting on one.
@@ -58,8 +58,8 @@ export default function Home() {
         <section className="flex flex-col gap-4">
           <h2 className="text-sm font-medium text-text-tertiary">Get started</h2>
           <CodeBlock
-            code={`git clone https://github.com/jasperdc23/ep-design-repo-kit.git
-cd ep-design-repo-kit
+            code={`git clone https://github.com/jasperdc23/diliman-labs-payments.git
+cd diliman-labs-payments
 npm install
 npm run dev`}
           />
@@ -112,7 +112,7 @@ npm run dev`}
             Internal design kit — not for external distribution.
           </p>
           <a
-            href="https://github.com/jasperdc23/ep-design-repo-kit"
+            href="https://github.com/jasperdc23/diliman-labs-payments"
             className="inline-flex items-center gap-2 text-sm text-text-secondary transition-colors duration-[var(--duration-fast)] hover:text-text-primary"
           >
             <GithubLogo size={16} />

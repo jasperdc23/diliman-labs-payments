@@ -16,12 +16,21 @@ type MediaCardProps = {
   className?: string;
 };
 
+// Dark base with the brand yellow raking across it — the same grade real
+// photography gets, so a placeholder and a shot sit side by side without
+// one looking like a hole in the layout.
+// Black-dominant with the accent as a hard-edged wedge rather than a wash —
+// the brand uses yellow as graphic blocking against near-black, so a flat
+// tint across the frame reads as mud instead of as the brand.
 const placeholderBackground = [
-  "linear-gradient(135deg, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 60%)",
-  "linear-gradient(315deg, color-mix(in srgb, var(--accent) 14%, transparent) 0%, transparent 55%)",
-  "repeating-linear-gradient(45deg, color-mix(in srgb, var(--border-subtle) 60%, transparent) 0 var(--space-1), transparent var(--space-1) var(--space-3))",
-  "var(--surface-sunken)",
+  "linear-gradient(115deg, transparent 0 46%, var(--accent) 46% 68%, transparent 68%)",
+  "radial-gradient(80% 60% at 12% 8%, color-mix(in srgb, var(--gray-0) 14%, transparent) 0%, transparent 62%)",
+  "var(--gray-1000)",
 ].join(", ");
+
+// Crushes a photo to the dark, high-contrast base the brand treatment
+// builds on; the yellow and grain go on top via .photo-treatment.
+const PHOTO_GRADE = "grayscale(1) contrast(1.45) brightness(0.62)";
 
 function Media({
   image,
@@ -48,10 +57,16 @@ function Media({
         }
         style={
           image
-            ? { backgroundImage: `url("${image}")`, backgroundSize: "cover", backgroundPosition: "center" }
+            ? {
+                backgroundImage: `url("${image}")`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                filter: PHOTO_GRADE,
+              }
             : { background: placeholderBackground }
         }
       />
+      <div className="photo-treatment" aria-hidden="true" />
       {children}
     </div>
   );
