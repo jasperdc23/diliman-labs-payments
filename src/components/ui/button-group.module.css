@@ -1,0 +1,55 @@
+/* Clusters real Button children so adjacent buttons share one 1px divider
+   instead of doubling up borders — only the outer corners of the whole
+   group stay rounded, every seam in between is square. No new button
+   styling is introduced here, this only reshapes composition. */
+.group {
+  display: inline-flex;
+}
+
+.group[data-orientation="vertical"] {
+  flex-direction: column;
+}
+
+.group > :global(button) {
+  border-radius: 0;
+}
+
+.group[data-orientation="horizontal"] > :global(button:not(:first-child)) {
+  margin-left: -1px;
+}
+
+.group[data-orientation="vertical"] > :global(button:not(:first-child)) {
+  margin-top: -1px;
+}
+
+.group[data-orientation="horizontal"] > :global(button:first-child) {
+  border-top-left-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-md);
+}
+
+.group[data-orientation="horizontal"] > :global(button:last-child) {
+  border-top-right-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+}
+
+.group[data-orientation="vertical"] > :global(button:first-child) {
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+}
+
+.group[data-orientation="vertical"] > :global(button:last-child) {
+  border-bottom-left-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+}
+
+.group > :global(button:only-child) {
+  border-radius: var(--radius-md);
+}
+
+/* A hovered or focused button needs its full border (and the primary
+   variant's hover halo) to render above its neighbors' overlapping edge. */
+.group > :global(button:hover),
+.group > :global(button:focus-visible) {
+  position: relative;
+  z-index: 1;
+}

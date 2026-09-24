@@ -1,0 +1,25 @@
+.bubble {
+  display: inline-block;
+  max-width: 32rem;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  word-break: break-word;
+}
+
+/* The "tail" is a single sharpened corner rather than a drawn triangle —
+   cheaper, themes itself with the same border-radius token as everything
+   else, and reads clearly enough at chat-bubble scale. */
+.bubble[data-variant="sent"] {
+  border-bottom-right-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.bubble[data-variant="received"] {
+  border-bottom-left-radius: var(--radius-sm);
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+}

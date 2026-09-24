@@ -1,0 +1,94 @@
+.label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Focus ring and border live on the GROUP container, not the bare input,
+   so leading/trailing adornments read as part of the same bordered box
+   rather than sitting outside it. */
+.group {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--surface);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.group:hover:not(:has(.input:focus-visible)):not([data-disabled="true"]) {
+  border-color: var(--border-strong);
+}
+
+.group:has(.input:focus-visible) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 var(--focus-ring-width) color-mix(in srgb, var(--focus-ring-color) 30%, transparent);
+}
+
+.group[data-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.group[data-invalid="true"]:has(.input:focus-visible) {
+  box-shadow: 0 0 0 var(--focus-ring-width) color-mix(in srgb, var(--danger) 30%, transparent);
+}
+
+.group[data-disabled="true"] {
+  background: var(--surface-sunken);
+  border-color: var(--border-subtle);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.input:disabled {
+  cursor: not-allowed;
+  color: var(--text-disabled);
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  flex: none;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+.slot[data-position="leading"] {
+  padding-right: 0;
+}
+
+.slot[data-position="trailing"] {
+  padding-left: 0;
+}
+
+/* An attached action (Paste, show/hide password) is a real Button rendered
+   in the trailing slot — give it back its own padding and let it sit flush
+   against the box edge. */
+.slot :global(button) {
+  margin: calc(var(--space-1) * -1) calc(var(--space-2) * -1);
+}
+
+.slot[data-position="trailing"] :global(button) {
+  margin-right: calc(var(--space-2) * -1);
+}

@@ -1,0 +1,14 @@
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  padding-block: var(--space-3);
+}
+
+.divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin-top: var(--space-3);
+}

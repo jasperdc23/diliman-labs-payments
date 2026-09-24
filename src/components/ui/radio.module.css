@@ -1,0 +1,175 @@
+.root {
+  --radio-size: calc(var(--space-4) + var(--space-1));
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.control {
+  position: relative;
+  flex: none;
+  width: var(--radio-size);
+  height: var(--radio-size);
+  margin-top: calc((var(--text-sm) * var(--leading-normal) - var(--radio-size)) / 2);
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.circle {
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-default);
+  background: var(--surface);
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.dot {
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--text-on-accent);
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.input:hover:not(:disabled):not(:checked) ~ .circle {
+  border-color: var(--border-strong);
+}
+
+.input:checked ~ .circle {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.input:checked:hover:not(:disabled) ~ .circle {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.input:checked ~ .circle .dot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.input:focus-visible ~ .circle {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.input:disabled ~ .circle {
+  background: var(--surface-sunken);
+  border-color: var(--border-subtle);
+}
+
+.input:disabled:checked ~ .circle {
+  background: var(--border-subtle);
+  border-color: var(--border-subtle);
+}
+
+.input:disabled:checked ~ .circle .dot {
+  background: var(--text-disabled);
+}
+
+.root[data-invalid="true"] .circle {
+  border-color: var(--danger);
+}
+
+.root[data-invalid="true"] .input:checked ~ .circle {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.root[data-invalid="true"] .input:focus-visible ~ .circle {
+  outline-color: var(--danger);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.description {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--text-tertiary);
+}
+
+.root[data-disabled="true"] .label {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.root[data-disabled="true"] .description {
+  color: var(--text-disabled);
+}
+
+.group {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.groupItems {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.groupItems[data-orientation="vertical"] {
+  flex-direction: column;
+}
+
+.groupItems[data-orientation="horizontal"] {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+}
+
+.groupHelper {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.groupHelper[data-invalid="true"] {
+  color: var(--danger);
+}

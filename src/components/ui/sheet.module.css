@@ -1,0 +1,102 @@
+/* Unlike modal.module.css, a sheet is pinned to one edge via explicit
+   `inset` values rather than centered with `margin: auto` — so it doesn't
+   need that fix. Preflight's `margin: 0` is harmless here since we set
+   margin ourselves anyway. */
+.dialog {
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+.dialog::backdrop {
+  background: var(--surface-overlay);
+  backdrop-filter: blur(calc(var(--glass-blur) / 4));
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) / 4));
+}
+
+.right {
+  inset: 0 0 0 auto;
+  height: 100vh;
+  width: 100%;
+  max-width: calc(var(--space-24) * 5);
+  border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+  animation: slideInRight var(--duration-normal) var(--ease-out);
+}
+
+.left {
+  inset: 0 auto 0 0;
+  height: 100vh;
+  width: 100%;
+  max-width: calc(var(--space-24) * 5);
+  border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+  animation: slideInLeft var(--duration-normal) var(--ease-out);
+}
+
+.top {
+  inset: 0 0 auto 0;
+  width: 100vw;
+  height: auto;
+  max-height: calc(var(--space-24) * 4);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  animation: slideInTop var(--duration-normal) var(--ease-out);
+}
+
+.bottom {
+  inset: auto 0 0 0;
+  width: 100vw;
+  height: auto;
+  max-height: calc(var(--space-24) * 4);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  animation: slideInBottom var(--duration-normal) var(--ease-out);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInTop {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.body {
+  overflow-y: auto;
+}

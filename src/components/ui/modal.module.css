@@ -1,0 +1,41 @@
+.dialog {
+  /* Native <dialog> centers itself via the UA stylesheet's `margin: auto`
+     on a fixed, inset:0 box — but Tailwind's preflight resets margin to 0
+     on every element, and author styles always beat UA defaults, so
+     without this the dialog renders pinned to the top-left instead of
+     centered. This one declaration is what actually centers every modal
+     in the kit. */
+  margin: auto;
+  width: 100%;
+  max-height: calc(100vh - var(--space-16));
+  padding: 0;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+.dialog::backdrop {
+  background: var(--surface-overlay);
+  backdrop-filter: blur(calc(var(--glass-blur) / 4));
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) / 4));
+}
+
+/* Widths are multiples of the largest spacing step so they stay on-scale
+   rather than introducing a second set of raw sizes. */
+.sm {
+  max-width: calc(var(--space-24) * 4);
+}
+
+.md {
+  max-width: calc(var(--space-24) * 5);
+}
+
+.lg {
+  max-width: calc(var(--space-24) * 7);
+}
+
+.body {
+  overflow-y: auto;
+}

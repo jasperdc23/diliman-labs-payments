@@ -1,0 +1,68 @@
+.root {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.root[data-orientation="vertical"] {
+  flex-direction: column;
+}
+
+.pane {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.divider {
+  flex: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--border-subtle);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.root[data-orientation="horizontal"] .divider {
+  width: 1px;
+  cursor: col-resize;
+  padding-inline: var(--space-1);
+  margin-inline: calc(var(--space-1) * -1);
+  background-clip: content-box;
+}
+
+.root[data-orientation="vertical"] .divider {
+  height: 1px;
+  cursor: row-resize;
+  padding-block: var(--space-1);
+  margin-block: calc(var(--space-1) * -1);
+  background-clip: content-box;
+}
+
+.divider:hover,
+.divider:focus-visible {
+  background-color: var(--border-strong);
+}
+
+.divider:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.grip {
+  flex: none;
+  border-radius: var(--radius-full);
+  background: var(--text-tertiary);
+}
+
+.root[data-orientation="horizontal"] .grip {
+  width: 3px;
+  height: var(--space-6);
+}
+
+.root[data-orientation="vertical"] .grip {
+  height: 3px;
+  width: var(--space-6);
+}

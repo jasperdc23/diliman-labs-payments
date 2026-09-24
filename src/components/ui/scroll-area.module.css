@@ -1,0 +1,40 @@
+/* CSS-forward: a plain overflow: auto box with a thin, token-colored
+   scrollbar that stays out of the way until hovered or scrolled. Firefox
+   gets there with scrollbar-width/scrollbar-color; WebKit/Blink need the
+   ::-webkit-scrollbar family since they don't read those properties (as
+   of this kit's target browsers). No JS scroll physics here on purpose —
+   the platform's native scrolling is left alone, only its chrome is
+   restyled. */
+.root {
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color var(--duration-normal) var(--ease-standard);
+}
+
+.root:hover,
+.root:focus-within {
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.root::-webkit-scrollbar {
+  width: var(--space-2);
+  height: var(--space-2);
+}
+
+.root::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.root::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background-color var(--duration-normal) var(--ease-standard);
+}
+
+.root:hover::-webkit-scrollbar-thumb,
+.root:focus-within::-webkit-scrollbar-thumb {
+  background-color: var(--border-strong);
+}

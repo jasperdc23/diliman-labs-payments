@@ -1,0 +1,172 @@
+.root {
+  --checkbox-size: calc(var(--space-4) + var(--space-1));
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.control {
+  position: relative;
+  flex: none;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  margin-top: calc((var(--text-sm) * var(--leading-normal) - var(--checkbox-size)) / 2);
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.box {
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--surface);
+  color: var(--text-on-accent);
+  font-size: var(--text-xs);
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.icon {
+  display: flex;
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.input:hover:not(:disabled):not(:checked):not(:indeterminate) ~ .box {
+  border-color: var(--border-strong);
+}
+
+.input:checked ~ .box,
+.input:indeterminate ~ .box {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.input:checked:hover:not(:disabled) ~ .box,
+.input:indeterminate:hover:not(:disabled) ~ .box {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.input:checked ~ .box .icon,
+.input:indeterminate ~ .box .icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.input:focus-visible ~ .box {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.input:disabled ~ .box {
+  background: var(--surface-sunken);
+  border-color: var(--border-subtle);
+  color: var(--text-disabled);
+}
+
+.input:disabled:checked ~ .box,
+.input:disabled:indeterminate ~ .box {
+  background: var(--border-subtle);
+  border-color: var(--border-subtle);
+}
+
+.root[data-invalid="true"] .box {
+  border-color: var(--danger);
+}
+
+.root[data-invalid="true"] .input:checked ~ .box,
+.root[data-invalid="true"] .input:indeterminate ~ .box {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.root[data-invalid="true"] .input:focus-visible ~ .box {
+  outline-color: var(--danger);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.description {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--text-tertiary);
+}
+
+/* `:has` covers the case where a parent <fieldset disabled> disables the
+   input natively, which no attribute on .root can know about. */
+.root[data-disabled="true"] .label,
+.root:has(.input:disabled) .label {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.root[data-disabled="true"] .description,
+.root:has(.input:disabled) .description {
+  color: var(--text-disabled);
+}
+
+.group {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.groupItems {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.groupHelper {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.groupHelper[data-invalid="true"] {
+  color: var(--danger);
+}

@@ -1,0 +1,51 @@
+.track {
+  position: relative;
+  width: 100%;
+  height: var(--space-2);
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--surface-sunken);
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  transform-origin: left;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  transition: transform var(--duration-normal) var(--ease-standard);
+}
+
+.fill[data-variant="success"] {
+  background: var(--success);
+}
+
+.fill[data-variant="warning"] {
+  background: var(--warning);
+}
+
+.fill[data-variant="danger"] {
+  background: var(--danger);
+}
+
+/*
+ * Indeterminate state: the duration is unknown (e.g. a page still
+ * loading), so a looping transform animation stands in for a real
+ * percentage — the same justified continuous-motion exception as the
+ * Spinner and Button's loading icon: it communicates "still working,"
+ * not decoration.
+ */
+.indeterminate {
+  width: 40%;
+  animation: indeterminate 1.4s var(--ease-standard) infinite;
+}
+
+@keyframes indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}

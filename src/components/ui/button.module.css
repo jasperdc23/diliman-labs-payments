@@ -1,0 +1,138 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-instant) var(--ease-standard);
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  transform: none;
+}
+
+.primary {
+  background: var(--accent);
+  color: var(--text-on-accent);
+  /* A hairline edge in the button's own text color gives a near-white
+     (dark mode) or near-black (light mode) fill a defined boundary
+     instead of reading as a flat, borderless swatch. */
+  border-color: color-mix(in srgb, var(--text-on-accent) 14%, transparent);
+  box-shadow: var(--shadow-sm);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  /* The color shift alone reads as subtle at a glance; a soft halo makes
+     "this is the hovered target" unambiguous without animating the
+     shadow itself — background-color is what's transitioning, this is
+     a discrete swap alongside it. */
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.primary:disabled {
+  background: var(--border-default);
+  color: var(--text-disabled);
+  box-shadow: none;
+}
+
+.secondary {
+  background: transparent;
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--surface-sunken);
+  border-color: var(--border-strong);
+}
+
+.secondary:disabled {
+  border-color: var(--border-subtle);
+  color: var(--text-disabled);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.ghost:hover:not(:disabled) {
+  background: var(--surface-sunken);
+}
+
+.ghost:disabled {
+  color: var(--text-disabled);
+}
+
+.danger {
+  background: var(--danger);
+  color: var(--text-on-danger);
+  box-shadow: var(--shadow-sm);
+}
+
+.danger:hover:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.danger:disabled {
+  background: var(--border-default);
+  color: var(--text-disabled);
+  box-shadow: none;
+}
+
+.sm {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.md {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.lg {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-base);
+}
+
+.iconOnly.sm {
+  padding: var(--space-2);
+}
+
+.iconOnly.md {
+  padding: var(--space-2);
+}
+
+.iconOnly.lg {
+  padding: var(--space-3);
+}
+
+.full {
+  width: 100%;
+}
+
+.spinner {
+  animation: spin 600ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

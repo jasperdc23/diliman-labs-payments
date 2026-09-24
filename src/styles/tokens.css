@@ -1,0 +1,223 @@
+/*
+ * EP Design Kit — Token Foundation
+ *
+ * Brandless placeholder tokens. Every value here is a neutral stand-in
+ * meant to be swapped once brand direction (colors, type, logos, voice)
+ * is finalized. Nothing downstream should hardcode a raw value — always
+ * reference a token.
+ *
+ * Layers:
+ *   1. Primitives  — raw scales, no meaning attached (--gray-50..950 etc.)
+ *   2. Semantic    — meaning attached, theme-aware (--surface, --text-primary)
+ *   3. Component   — narrow aliases used by components (--button-bg)
+ */
+
+:root {
+  /* ---------- 1. Primitives ---------- */
+  --gray-0: #ffffff;
+  --gray-50: #f8f9fa;
+  --gray-100: #f1f3f5;
+  --gray-200: #e9ecef;
+  --gray-300: #dee2e6;
+  --gray-400: #ced4da;
+  --gray-500: #adb5bd;
+  --gray-600: #868e96;
+  --gray-700: #495057;
+  --gray-800: #343a40;
+  --gray-900: #212529;
+  --gray-950: #16181b;
+  --gray-1000: #0a0b0c;
+
+  /* Accent — currently monochrome: near-black in light mode, near-white in
+     dark. These four values are the ONLY thing a brand color needs to touch.
+     500/600 are the light-mode pair (600 is the hover/pressed step, darker);
+     300/400 are the dark-mode pair (300 is the hover step, lighter). Keep
+     500/600 dark enough for white text and 300/400 light enough for dark
+     text, and every component, chart and focus ring follows automatically. */
+  --accent-300: #ffffff;
+  --accent-400: #e4e6e9;
+  --accent-500: #16181b;
+  --accent-600: #000000;
+
+  --success-500: #2f9e44;
+  --warning-500: #f08c00;
+  --danger-500: #e03131;
+
+  /* Typography */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+
+  /* Spacing scale (4px base) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* Motion — only transform/opacity/background are animated anywhere in
+     this kit, so transitions stay on the compositor and never trigger
+     layout. Keep durations short; this is a "taste," not a show. */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --duration-instant: 80ms;
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+
+  /* Focus ring */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  /* Follows --accent rather than a fixed step, so the ring stays visible
+     when the theme flips and when a brand color is dropped in. */
+  --focus-ring-color: var(--accent);
+
+  /* ---------- 2. Semantic (light default) ---------- */
+  --surface: var(--gray-0);
+  --surface-raised: var(--gray-0);
+  --surface-sunken: var(--gray-50);
+  --surface-overlay: rgba(10, 11, 12, 0.5);
+
+  /* Translucent rather than a solid gray step — a fixed-opacity ink
+     border reads as a faint hairline against any surface it lands on
+     (card, sunken well, glass), instead of needing separate tuning per
+     surface. Same technique --glass-border already used. */
+  --border-subtle: rgba(10, 11, 12, 0.08);
+  --border-default: rgba(10, 11, 12, 0.12);
+  --border-strong: rgba(10, 11, 12, 0.22);
+
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-700);
+  --text-tertiary: var(--gray-600);
+  --text-disabled: var(--gray-400);
+  --text-on-accent: var(--gray-0);
+  --text-on-danger: var(--gray-0);
+
+  --accent: var(--accent-500);
+  --accent-hover: var(--accent-600);
+  --accent-subtle: var(--gray-100);
+
+  --success: var(--success-500);
+  --warning: var(--warning-500);
+  --danger: var(--danger-500);
+
+  --shadow-sm: 0 1px 2px rgba(10, 11, 12, 0.06);
+  --shadow-md: 0 4px 12px rgba(10, 11, 12, 0.08);
+  --shadow-lg: 0 12px 32px rgba(10, 11, 12, 0.12);
+
+  --danger-subtle: #fff0f0;
+  --success-subtle: #ebfbee;
+
+  /* Frosted glass surface — used for the nav and any floating container
+     that should read as "above" the page rather than flush with it.
+     Opaque enough that text sitting on it never fights the page behind;
+     the blur softens the sliver that still shows through rather than
+     doing the legibility work by itself. */
+  --glass-bg: rgba(255, 255, 255, 0.94);
+  --glass-border: rgba(20, 20, 22, 0.08);
+  --glass-blur: 20px;
+
+  /* Mesh — three neutral washes at slightly different values, applied as
+     radial gradients that fade to transparent. Monochrome for now; these
+     are the three stops to tint if the brand wants color in the page
+     background later. */
+  --mesh-1: #eef0f2;
+  --mesh-2: #f4f5f7;
+  --mesh-3: #e9ebee;
+
+  /* Grain — a tiled SVG noise overlay. Kept this low because grain reads
+     much stronger on light surfaces than the number suggests. */
+  /* Chart series — while the kit is monochrome these are lightness steps,
+     ordered so adjacent slots sit as far apart in value as possible. Color
+     alone cannot carry identity in grayscale, so line charts pair each slot
+     with its own dash pattern and every chart ships a legend. That caps
+     comfortable use at FOUR series; past that, group into "Other" or facet
+     into small multiples. Adding a brand hue is what unlocks a real
+     eight-slot categorical palette — see the Charts page. */
+  --series-1: #16181b;
+  --series-2: #ced4da;
+  --series-3: #495057;
+  --series-4: #868e96;
+
+  --chart-grid: var(--gray-200);
+  --chart-axis: var(--gray-300);
+
+  --grain-opacity: 0.035;
+  --grain-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Dark theme ---------- */
+[data-theme="dark"] {
+  --surface: var(--gray-950);
+  --surface-raised: var(--gray-900);
+  --surface-sunken: var(--gray-1000);
+  --surface-overlay: rgba(0, 0, 0, 0.6);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-default: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.24);
+
+  --text-primary: var(--gray-50);
+  --text-secondary: var(--gray-300);
+  --text-tertiary: var(--gray-500);
+  --text-disabled: var(--gray-700);
+  --text-on-accent: var(--gray-950);
+
+  --accent: var(--accent-400);
+  --accent-hover: var(--accent-300);
+  /* One step lighter than --surface-raised (both gray-900 would be
+     identical) — this is what a hovered option/day needs to read against
+     a popover surface, not just against the page. */
+  --accent-subtle: var(--gray-800);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+
+  --danger-subtle: #2c1618;
+  --success-subtle: #132a1a;
+
+  --glass-bg: rgba(22, 24, 27, 0.92);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 20px;
+
+  --mesh-1: #202225;
+  --mesh-2: #191b1e;
+  --mesh-3: #232629;
+
+  /* The same ramp re-stepped for the dark surface, not an automatic flip. */
+  --series-1: #f1f3f5;
+  --series-2: #495057;
+  --series-3: #ced4da;
+  --series-4: #868e96;
+
+  --chart-grid: var(--gray-800);
+  --chart-axis: var(--gray-700);
+
+  /* Grain needs a touch more presence on dark surfaces to be visible at
+     all, since there's less luminance range for it to work against. */
+  --grain-opacity: 0.05;
+}

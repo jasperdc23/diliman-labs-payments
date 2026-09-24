@@ -1,0 +1,61 @@
+.group {
+  display: inline-flex;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.group .item:not(:first-child) {
+  margin-left: -1px;
+}
+
+.group .item:first-child {
+  border-top-left-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-md);
+}
+
+.group .item:last-child {
+  border-top-right-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+}
+
+.item:hover:not(:disabled) {
+  background: var(--surface-sunken);
+}
+
+.item:focus-visible {
+  outline: none;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 0 var(--focus-ring-width) color-mix(in srgb, var(--focus-ring-color) 30%, transparent);
+}
+
+/* Same accent-subtle + primary-text pairing as Toggle's pressed state and
+   Select's/DatePicker's selected state — one selected-state language across
+   the kit. */
+.item[aria-pressed="true"],
+.item[aria-checked="true"] {
+  background: var(--accent-subtle);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.item:disabled {
+  cursor: not-allowed;
+  color: var(--text-disabled);
+}

@@ -1,0 +1,127 @@
+.wrapper {
+  width: 100%;
+  overflow: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+}
+
+.head th {
+  position: relative;
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.sticky .head th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table[data-density="comfortable"] th,
+.table[data-density="comfortable"] td {
+  padding: var(--space-3) var(--space-4);
+}
+
+.table[data-density="compact"] th,
+.table[data-density="compact"] td {
+  padding: var(--space-2) var(--space-3);
+}
+
+.table td {
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.body tr:last-child td {
+  border-bottom: none;
+}
+
+.zebra .body tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--surface-sunken) 55%, transparent);
+}
+
+.body tr {
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.body tr:hover td {
+  background: var(--surface-sunken);
+}
+
+.right {
+  text-align: right;
+}
+
+.right .sortButton {
+  justify-content: flex-end;
+}
+
+.center {
+  text-align: center;
+}
+
+.center .sortButton {
+  justify-content: center;
+}
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: 100%;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.sortButton:hover {
+  color: var(--text-primary);
+}
+
+.sortButton[data-active="true"] {
+  color: var(--text-primary);
+}
+
+.sortIcon {
+  color: var(--text-tertiary);
+}
+
+.sortButton[data-active="true"] .sortIcon {
+  color: var(--accent);
+}
+
+.empty td {
+  padding: var(--space-12) var(--space-4);
+  text-align: center;
+  color: var(--text-tertiary);
+}
+
+.empty tr:hover td {
+  background: transparent;
+}

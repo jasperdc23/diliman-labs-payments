@@ -1,0 +1,52 @@
+/* Height can't be animated directly here (see tokens.css's motion note —
+   only transform/opacity/background are meant to hit the compositor), and
+   measuring pixel heights in JS means a ResizeObserver plus manual height
+   math just to reveal some text. Instead this animates `grid-template-rows`
+   from 0fr to 1fr on a single-row grid wrapper: the row track is a
+   fraction unit, not a pixel height, so the browser can interpolate it
+   without ever knowing the content's real height, and the inner content
+   stays `overflow: hidden` and reflows naturally at any size. This is the
+   repo's precedent for "expand/collapse a region" — Accordion composes
+   this same wrapper per item rather than duplicating it. */
+.root {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-normal) var(--ease-standard);
+}
+
+.root[data-state="open"] {
+  grid-template-rows: 1fr;
+}
+
+.inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.caret {
+  flex: none;
+  display: flex;
+  font-size: var(--text-base);
+  color: var(--text-tertiary);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.trigger[aria-expanded="true"] .caret {
+  transform: rotate(90deg);
+}

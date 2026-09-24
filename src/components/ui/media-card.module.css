@@ -1,0 +1,6 @@
+/* Overlay copy sits on --surface-overlay, which is dark in both themes, so
+   these two stay fixed rather than flipping with the theme. */
+.overlayText {
+  --media-overlay-fg: rgba(255, 255, 255, 0.95);
+  --media-overlay-fg-muted: rgba(255, 255, 255, 0.78);
+}

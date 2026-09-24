@@ -1,0 +1,102 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--surface);
+  padding: var(--space-2) var(--space-3);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.root:hover:not([data-disabled="true"]):not(:focus-within) {
+  border-color: var(--border-strong);
+}
+
+.root:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 var(--focus-ring-width) color-mix(in srgb, var(--focus-ring-color) 30%, transparent);
+}
+
+.root[data-disabled="true"] {
+  background: var(--surface-sunken);
+  border-color: var(--border-subtle);
+}
+
+.leading {
+  flex: none;
+  display: flex;
+  font-size: var(--text-base);
+  color: var(--text-tertiary);
+}
+
+.root[data-disabled="true"] .leading {
+  color: var(--text-disabled);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.input:disabled {
+  cursor: not-allowed;
+  color: var(--text-disabled);
+}
+
+.input::-webkit-search-cancel-button,
+.input::-webkit-search-decoration {
+  appearance: none;
+}
+
+.clear {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-instant) var(--ease-standard),
+    color var(--duration-instant) var(--ease-standard);
+}
+
+.clear:hover {
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+}
+
+.spinner {
+  flex: none;
+  display: flex;
+  font-size: var(--text-base);
+  color: var(--text-tertiary);
+  /* A spinner reads as a stall indicator, not a transition, so it sits
+     outside the ≤200ms interaction budget — four normal beats per turn. */
+  animation: spin calc(var(--duration-normal) * 4) linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

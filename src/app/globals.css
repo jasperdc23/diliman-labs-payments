@@ -1,0 +1,138 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-disabled: var(--text-disabled);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-danger-subtle: var(--danger-subtle);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+* {
+  border-color: var(--border-default);
+}
+
+html {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--surface);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  transition:
+    background-color var(--duration-normal) var(--ease-standard),
+    color var(--duration-normal) var(--ease-standard);
+}
+
+/* Mesh + grain are pure background layers — no extra DOM, no JS, nothing
+   that animates — so they cost one paint and nothing after that.
+   `.mesh` belongs on page-level surfaces ONLY. Containers that sit above
+   the page use `.glass` below, so the mesh shows through them rather than
+   being repeated inside them; two washes stacked make a card read as a
+   gradient panel instead of a surface. */
+.mesh {
+  position: relative;
+  background-repeat: no-repeat;
+  background-color: var(--surface);
+  background-image:
+    radial-gradient(at 12% 15%, var(--mesh-1) 0%, transparent 55%),
+    radial-gradient(at 88% 10%, var(--mesh-2) 0%, transparent 55%),
+    radial-gradient(at 50% 100%, var(--mesh-3) 0%, transparent 55%);
+  /* Anchored to the viewport rather than the document, so it doesn't pan
+     or stretch as a long docs page scrolls past it. Safari older than 26
+     ignores fixed body backgrounds on iOS; falling back to `scroll` there
+     costs nothing since the wash is subtle either way. */
+  background-attachment: fixed;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .mesh {
+    background-attachment: scroll;
+  }
+}
+
+/* Frosted glass. `.glass` blurs what's behind it; `.glass-flat` is the
+   same surface without the blur, for dense grids and long lists where a
+   backdrop-filter per item is the one texture effect here that actually
+   costs something per frame. */
+.glass,
+.glass-flat {
+  background-color: var(--glass-bg);
+  border-color: var(--glass-border);
+}
+
+.glass {
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+/* Opaque surface for floating panels that carry their own text — dropdown
+   listboxes, calendar popovers, menus. Frosted glass is for panels that
+   float over imagery or the page mesh with little content of their own
+   (the nav); a listbox has to stay legible over whatever's scrolled behind
+   it, so it gets a solid surface instead. */
+.popover-surface {
+  background-color: var(--surface-raised);
+  border-color: var(--border-default);
+}
+
+/* Grain overlays the element's own box only. `border-radius: inherit`
+   keeps it inside rounded corners, and since it's inset:0 it never
+   extends past its parent, so no overflow clipping is needed. */
+.grain {
+  position: relative;
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--grain-texture);
+  background-size: 180px 180px;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Consistent, visible focus ring everywhere instead of relying on each
+   component to draw its own — keeps keyboard nav accessible by default. */
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Respect the OS-level motion preference: every transition/animation in
+   this kit collapses to near-instant so nothing keeps moving for people
+   who asked it not to — and it's free performance-wise too. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

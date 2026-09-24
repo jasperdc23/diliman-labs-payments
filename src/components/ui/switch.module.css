@@ -1,0 +1,128 @@
+.root {
+  --switch-width: calc(var(--space-8) + var(--space-2));
+  --switch-height: var(--space-6);
+  --switch-padding: var(--space-1);
+  --switch-border: 1px;
+  --switch-knob: calc(var(--switch-height) - (var(--switch-padding) + var(--switch-border)) * 2);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.control {
+  position: relative;
+  flex: none;
+  width: var(--switch-width);
+  height: var(--switch-height);
+  margin-top: calc((var(--text-sm) * var(--leading-normal) - var(--switch-height)) / 2);
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.track {
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: var(--switch-padding);
+  border-radius: var(--radius-full);
+  border: var(--switch-border) solid var(--border-default);
+  background: var(--surface-sunken);
+  transition:
+    background-color var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard);
+}
+
+.knob {
+  width: var(--switch-knob);
+  height: var(--switch-knob);
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(0);
+  transition: transform var(--duration-normal) var(--ease-standard);
+}
+
+.input:hover:not(:disabled):not(:checked) ~ .track {
+  border-color: var(--border-strong);
+}
+
+.input:checked ~ .track {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.input:checked:hover:not(:disabled) ~ .track {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.input:checked ~ .track .knob {
+  transform: translateX(
+    calc(var(--switch-width) - var(--switch-knob) - (var(--switch-padding) + var(--switch-border)) * 2)
+  );
+}
+
+.input:focus-visible ~ .track {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.input:disabled ~ .track {
+  background: var(--surface-sunken);
+  border-color: var(--border-subtle);
+}
+
+.input:disabled:checked ~ .track {
+  background: var(--border-subtle);
+  border-color: var(--border-subtle);
+}
+
+.input:disabled ~ .track .knob {
+  background: var(--surface);
+  box-shadow: none;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.description {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--text-tertiary);
+}
+
+.root[data-disabled="true"] .label {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.root[data-disabled="true"] .description {
+  color: var(--text-disabled);
+}

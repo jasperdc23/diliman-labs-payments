@@ -1,0 +1,17 @@
+/*
+ * Matches button.module.css's `.spinner` exactly (same duration, easing,
+ * and keyframe) — this is the kit's one documented continuous-motion
+ * exception, so Button's loading icon and this standalone Spinner must
+ * never drift apart. Duplicated here rather than imported because
+ * button.module.css is out of scope to edit; a future pass could extract
+ * both into one shared CSS module.
+ */
+.spinner {
+  animation: spin 600ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
