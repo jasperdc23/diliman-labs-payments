@@ -26,6 +26,7 @@
   --gray-900: #212529;
   --gray-950: #141618;
   --gray-1000: #0d0e10;
+  --gray-1100: #08090a;
 
   /* Accent — Diliman Labs brand: signature yellow in both themes, so it
      carries its own contrast rule rather than the old "dark in light mode /
@@ -42,6 +43,11 @@
   --success-500: #2f9e44;
   --warning-500: #f08c00;
   --danger-500: #e03131;
+
+  /* Lightened pair for dark/ink grounds. #e03131 on #141618 is 4.09:1 —
+     sub-AA for the 14px stat delta — and #2f9e44 is worse. */
+  --success-400: #51cf66;
+  --danger-400: #ff6b6b;
 
   /* Typography */
   --font-sans: var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
@@ -60,6 +66,28 @@
   --leading-tight: 1.2;
   --leading-normal: 1.5;
   --leading-relaxed: 1.7;
+
+  /* Weight — Roboto ships 300-900 and 700/900 currently render nowhere.
+     CSS modules (table, tabs) can't reach Tailwind's font utilities, so
+     weight has to exist as a token or it gets hardcoded. */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  /* Tracking */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.02em;
+  --tracking-caps: 0.06em;
+
+  /* Rule widths — replaces the bare 1px/2px/3px written inline today. */
+  --rule-hairline: 1px;
+  --rule-medium: 2px;
+  --rule-heavy: 3px;
+  --rule-block: 4px;
 
   /* Spacing scale (4px base) */
   --space-1: 0.25rem;
@@ -100,20 +128,24 @@
   /* ---------- 2. Semantic (light default) ---------- */
   --surface: var(--gray-0);
   --surface-raised: var(--gray-0);
-  --surface-sunken: var(--gray-50);
+  /* --gray-100, not --gray-50: at --gray-50 the zebra stripe and the hover
+     row measure 1.04:1 against the card, which is no difference at all. */
+  --surface-sunken: var(--gray-100);
   --surface-overlay: rgba(10, 11, 12, 0.5);
 
   /* Translucent rather than a solid gray step — a fixed-opacity ink
      border reads as a faint hairline against any surface it lands on
      (card, sunken well, glass), instead of needing separate tuning per
      surface. Same technique --glass-border already used. */
-  --border-subtle: rgba(10, 11, 12, 0.08);
-  --border-default: rgba(10, 11, 12, 0.12);
-  --border-strong: rgba(10, 11, 12, 0.22);
+  --border-subtle: rgba(10, 11, 12, 0.12);
+  --border-default: rgba(10, 11, 12, 0.2);
+  --border-strong: rgba(10, 11, 12, 0.36);
 
-  --text-primary: var(--gray-900);
-  --text-secondary: var(--gray-700);
-  --text-tertiary: var(--gray-600);
+  /* Body ink is brand ink. --text-tertiary at --gray-600 was a live AA
+     failure (3.32:1); at --gray-700 it clears at 8.2:1. */
+  --text-primary: var(--gray-950);
+  --text-secondary: var(--gray-800);
+  --text-tertiary: var(--gray-700);
   --text-disabled: var(--gray-400);
   /* Ink, not white — the brand accent is yellow, which fails contrast under
      white text in either theme. */
@@ -124,20 +156,28 @@
   --accent-hover: var(--accent-600);
   /* Theme-adaptive tint instead of a fixed gray step, so a hovered/selected
      row reads as "yellow, faintly" against whatever surface it's on. */
-  --accent-subtle: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  --accent-subtle: color-mix(in srgb, var(--accent) 22%, var(--surface));
   /* The accent as TEXT or a thin stroke, which is a different problem from
      the accent as a filled background: raw yellow on white is ~1.3:1 and
      effectively invisible. Mixing it toward ink keeps the brand hue legible
      (a dark gold) and still tracks --accent if the brand color ever moves.
      Dark mode overrides this back to the pure accent, which needs no help
-     against a near-black surface. */
-  --accent-text: color-mix(in srgb, var(--accent) 52%, var(--gray-1000));
+     against a near-black surface. A 52% mix measured 4.03:1 on white — a
+     live AA failure, and the focus ring follows this token. 45% lands at
+     5.00:1. */
+  --accent-text: color-mix(in srgb, var(--accent) 45%, var(--gray-1000));
+
+  /* The hard ink edge every yellow fill on a LIGHT ground must carry.
+     Yellow's own boundary against white is 1.24:1; ink is 18.5:1. Both
+     surface scopes below set this to transparent, since a yellow fill on
+     ink already clears the floor on its own. */
+  --accent-edge: var(--gray-950);
 
   --success: var(--success-500);
   --warning: var(--warning-500);
   --danger: var(--danger-500);
 
-  --shadow-sm: 0 1px 2px rgba(10, 11, 12, 0.06);
+  --shadow-sm: 0 1px 2px rgba(10, 11, 12, 0.05);
   --shadow-md: 0 4px 12px rgba(10, 11, 12, 0.08);
   --shadow-lg: 0 12px 32px rgba(10, 11, 12, 0.12);
 
@@ -150,7 +190,9 @@
      the blur softens the sliver that still shows through rather than
      doing the legibility work by itself. */
   --glass-bg: rgba(255, 255, 255, 0.94);
-  --glass-border: rgba(20, 20, 22, 0.08);
+  /* Card and nav borders come from HERE, not --border-default. At 0.08 every
+     card reads edgeless no matter what the border scale does. */
+  --glass-border: rgba(20, 20, 22, 0.18);
   --glass-blur: 20px;
 
   /* Mesh — three neutral washes at slightly different values, applied as
@@ -172,12 +214,16 @@
      brand color; dash patterns still carry identity past series-1, and
      every chart ships a legend. */
   --series-1: var(--gray-950);
-  --series-2: #ced4da;
-  --series-3: #495057;
-  --series-4: #868e96;
+  --series-2: var(--gray-700);
+  /* --accent-text is the one legal way the brand hue enters a light chart:
+     5.00:1, where raw --accent would be 1.24:1. */
+  --series-3: var(--accent-text);
+  --series-4: var(--gray-600);
 
   --chart-grid: var(--gray-200);
-  --chart-axis: var(--gray-300);
+  /* A chart baseline is a structural edge, not a hairline decoration —
+     --gray-300 measured 1.3:1. */
+  --chart-axis: var(--gray-700);
 
   --grain-opacity: 0.035;
   --grain-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -203,6 +249,14 @@
   --accent: var(--accent-400);
   --accent-hover: var(--accent-300);
   --accent-text: var(--accent-400);
+  /* On ink a yellow fill already has 14.9:1, so it needs no ink edge. */
+  --accent-edge: transparent;
+  /* Pinned to the pre-existing value so the light bump to 22% doesn't leak
+     in here through the shared :root declaration. */
+  --accent-subtle: color-mix(in srgb, var(--accent) 14%, var(--surface));
+
+  --success: var(--success-400);
+  --danger: var(--danger-400);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
@@ -222,9 +276,10 @@
   /* series-1 is the brand accent here — yellow-on-near-black has plenty of
      contrast, unlike yellow-on-white in the light theme above. */
   --series-1: var(--accent-400);
-  --series-2: #495057;
-  --series-3: #ced4da;
-  --series-4: #868e96;
+  /* #495057 measured 2.26:1 on ink — a live failure. */
+  --series-2: var(--gray-400);
+  --series-3: var(--gray-600);
+  --series-4: var(--gray-500);
 
   --chart-grid: var(--gray-800);
   --chart-axis: var(--gray-700);
@@ -232,4 +287,114 @@
   /* Grain needs a touch more presence on dark surfaces to be visible at
      all, since there's less luminance range for it to work against. */
   --grain-opacity: 0.05;
+}
+
+/* ---------- 3. Surface scopes ----------
+   Any subtree carrying data-surface re-declares the SEMANTIC layer only —
+   never a paint property — so every existing component renders correctly
+   inside it with no props and no edits.
+
+   Placement is load-bearing: these blocks must come AFTER [data-theme="dark"].
+   Both are (0,1,0) specificity, so source order decides which wins when a
+   scope is nested inside the dark theme. */
+[data-surface="ink"] {
+  --surface: var(--gray-950);
+  --surface-raised: var(--gray-900);
+  --surface-sunken: var(--gray-1000);
+  --surface-overlay: rgba(0, 0, 0, 0.6);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-default: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.24);
+
+  --text-primary: var(--gray-50);
+  --text-secondary: var(--gray-300);
+  --text-tertiary: var(--gray-500);
+  --text-disabled: var(--gray-700);
+
+  --accent: var(--accent-400);
+  --accent-hover: var(--accent-300);
+  --accent-text: var(--accent-400);
+  --accent-edge: transparent;
+  /* Re-declared, not inherited: :root's color-mix resolved against WHITE
+     and inherits as a computed value. */
+  --accent-subtle: color-mix(in srgb, var(--accent) 16%, var(--surface));
+  /* Re-declared for the same reason — omit it and the ring stays dark gold
+     on near-black at 1.5:1. */
+  --focus-ring-color: var(--accent-text);
+
+  --success: var(--success-400);
+  --danger: var(--danger-400);
+  --warning: var(--warning-500);
+  --danger-subtle: #2c1618;
+  --success-subtle: #132a1a;
+
+  /* Card paints through .glass/.glass-flat. Omit this and every Card
+     inside the frame paints translucent white. */
+  --glass-bg: var(--gray-950);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  --mesh-1: #1c1e20;
+  --mesh-2: #141618;
+  --mesh-3: #202224;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+
+  --series-1: var(--accent-400);
+  --series-2: var(--gray-400);
+  --series-3: var(--gray-600);
+  --series-4: var(--gray-500);
+  --chart-grid: var(--gray-800);
+  --chart-axis: var(--gray-700);
+
+  --grain-opacity: 0.05;
+}
+
+/* Differentiation. In dark mode the page is ALREADY --gray-950, so an
+   un-overridden ink panel would go flush with the canvas and the whole
+   treatment would vanish in the theme that already looks branded.
+   (0,2,0) specificity, so this wins over the block above. */
+[data-theme="dark"] [data-surface="ink"] {
+  --surface: var(--gray-1000);
+  --surface-raised: var(--gray-950);
+  --surface-sunken: var(--gray-1100);
+  --glass-bg: var(--gray-1000);
+}
+
+/* A solid yellow block with ink type, as a first-class surface. */
+[data-surface="accent"] {
+  --surface: var(--accent);
+  --surface-raised: var(--accent);
+  --surface-sunken: color-mix(in srgb, var(--gray-1000) 8%, var(--accent));
+  --glass-bg: var(--accent);
+  --glass-border: rgba(10, 11, 12, 0.2);
+
+  --text-primary: var(--gray-950);
+  --text-secondary: color-mix(in srgb, var(--gray-1000) 78%, var(--accent));
+  --text-tertiary: color-mix(in srgb, var(--gray-1000) 62%, var(--accent));
+  --text-on-accent: var(--gray-950);
+  --accent-text: var(--gray-950);
+  --accent-subtle: color-mix(in srgb, var(--gray-1000) 12%, var(--accent));
+  --accent-edge: transparent;
+
+  --border-subtle: rgba(10, 11, 12, 0.16);
+  --border-default: rgba(10, 11, 12, 0.28);
+  --border-strong: rgba(10, 11, 12, 0.4);
+
+  /* The one surface where a yellow ring is invisible. Ink is 18:1 here. */
+  --focus-ring-color: var(--gray-950);
+
+  /* Raw #2f9e44 on yellow is 3.3:1 and the stat delta is 14px — these mixes
+     land at 6.36:1 and 7.81:1 while keeping the up/down color encoding. */
+  --success: color-mix(in srgb, var(--success-500) 55%, var(--gray-1000));
+  --danger: color-mix(in srgb, var(--danger-500) 55%, var(--gray-1000));
+  --warning: var(--gray-950); /* amber on yellow is unreadable at any mix */
+  --success-subtle: color-mix(in srgb, var(--gray-1000) 10%, var(--accent));
+  --danger-subtle: color-mix(in srgb, var(--gray-1000) 10%, var(--accent));
+
+  --shadow-sm: 0 1px 2px rgba(10, 11, 12, 0.18);
+  --shadow-md: 0 4px 12px rgba(10, 11, 12, 0.22);
+  --grain-opacity: 0.045;
 }

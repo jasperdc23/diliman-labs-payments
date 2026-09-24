@@ -26,6 +26,14 @@ type TableProps<T> = {
   stickyHeader?: boolean;
   emptyState?: ReactNode;
   defaultSort?: { key: string; direction: SortDirection };
+  /**
+   * `"ink"` scopes the header band to the ink surface. `.head th` already
+   * reads --surface-sunken and --text-secondary, and the active sort caret
+   * already reads --accent-text, so the black band and a pure-yellow caret
+   * both fall out of the scope with no extra styling. Defaults to
+   * `"default"` — /docs uses Table too.
+   */
+  headerTone?: "default" | "ink";
   className?: string;
 };
 
@@ -46,6 +54,7 @@ export function Table<T>({
   stickyHeader = false,
   emptyState = "No records to show.",
   defaultSort,
+  headerTone = "default",
   className = "",
 }: TableProps<T>) {
   const [sort, setSort] = useState<{ key: string; direction: SortDirection } | null>(
@@ -83,7 +92,7 @@ export function Table<T>({
     <div className={wrapperClass} style={stickyHeader ? { maxHeight: "24rem" } : undefined}>
       <table className={styles.table} data-density={density}>
         {caption && <caption className="sr-only">{caption}</caption>}
-        <thead className={styles.head}>
+        <thead className={styles.head} data-surface={headerTone === "ink" ? "ink" : undefined}>
           <tr>
             {columns.map((column) => {
               const activeSort = sort && sort.key === column.key ? sort : null;

@@ -39,7 +39,15 @@ export function Marker({ tone = "neutral", size = "md", label, className = "" }:
         role={label ? undefined : "img"}
         aria-label={label ? undefined : `Status: ${tone}`}
         className="inline-block shrink-0 rounded-full"
-        style={{ width: SIZE_DOT[size], height: SIZE_DOT[size], background: TONE_COLOR[tone] }}
+        style={{
+          width: SIZE_DOT[size],
+          height: SIZE_DOT[size],
+          background: TONE_COLOR[tone],
+          // A bare yellow swatch is 1.24:1 on white, and the swatch is the
+          // only thing carrying series identity. --accent-edge resolves to
+          // transparent inside a surface scope, where the fill needs no help.
+          boxShadow: tone === "accent" ? "inset 0 0 0 1px var(--accent-edge)" : undefined,
+        }}
       />
       {label && (
         <span

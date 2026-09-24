@@ -1,44 +1,44 @@
-"use client";
-
 import Image from "next/image";
-import { useTheme } from "next-themes";
-import { useSyncExternalStore } from "react";
-
-const emptySubscribe = () => () => {};
 
 // Intrinsic size of the supplied wordmark, used to derive width from height.
 const RATIO = 775 / 226;
 
+/**
+ * Renders both wordmark assets and lets the cascade pick one.
+ *
+ * The mark is ink-on-transparent, so it vanishes on a dark ground and needs
+ * the white variant there. That choice can't be made from the theme alone:
+ * an ink sidebar in LIGHT mode has no theme signal, and a yellow panel
+ * inside an ink frame wants the ink mark back. The rules live in
+ * globals.css (`.brand-mark-ink` / `.brand-mark-light`) keyed off
+ * `[data-theme]` and `[data-surface]`, which nest correctly where JS
+ * reading `resolvedTheme` could not — and this drops the pre-hydration
+ * blank box along with the client boundary.
+ *
+ * Cost is one extra small PNG fetch. `alt` stays on the ink copy only, so
+ * the mark is announced once.
+ */
 export function BrandMark({ height = 24, className = "" }: { height?: number; className?: string }) {
-  const { resolvedTheme } = useTheme();
-  const mounted = useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false,
-  );
-
   const width = Math.round(height * RATIO);
 
-  // The wordmark is ink-on-transparent, so it would vanish against a dark
-  // surface — the dark-theme asset is the same mark recolored to white with
-  // the yellow dot left intact. Reserve the space before hydration so the
-  // header doesn't shift when the right variant resolves.
-  if (!mounted) {
-    return <div style={{ height, width }} className={className} aria-hidden />;
-  }
-
   return (
-    <Image
-      src={
-        resolvedTheme === "dark"
-          ? "/brand/diliman-labs-wordmark-light.png"
-          : "/brand/diliman-labs-wordmark.png"
-      }
-      alt="Diliman Labs"
-      height={height}
-      width={width}
-      priority
-      className={className}
-    />
+    <span className={`relative inline-flex ${className}`} style={{ height, width }}>
+      <Image
+        src="/brand/diliman-labs-wordmark.png"
+        alt="Diliman Labs"
+        height={height}
+        width={width}
+        priority
+        className="brand-mark-ink"
+      />
+      <Image
+        src="/brand/diliman-labs-wordmark-light.png"
+        alt=""
+        aria-hidden
+        height={height}
+        width={width}
+        className="brand-mark-light absolute inset-0"
+      />
+    </span>
   );
 }

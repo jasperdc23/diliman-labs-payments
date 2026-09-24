@@ -13,6 +13,15 @@ type StatCardProps = {
   icon?: ReactNode;
   interactive?: boolean;
   flat?: boolean;
+  /**
+   * Scopes the whole card to a surface: `"ink"` for a near-black panel,
+   * `"accent"` for a solid yellow block with ink type. Both re-declare the
+   * semantic tokens only, so everything inside — value, delta color, icon
+   * chip, focus ring — follows with no further props. A non-default tone
+   * forces `flat`: a backdrop blur over an opaque fill costs a frame for
+   * nothing.
+   */
+  tone?: "default" | "ink" | "accent";
   className?: string;
 };
 
@@ -44,31 +53,49 @@ export function StatCard({
   icon,
   interactive = false,
   flat = false,
+  tone = "default",
   className = "",
 }: StatCardProps) {
   const resolvedDirection = direction ?? inferDirection(delta);
   const DeltaIcon = resolvedDirection === "down" ? TrendDown : TrendUp;
 
   return (
-    <Card interactive={interactive} flat={flat} className={className}>
+    <Card
+      interactive={interactive}
+      flat={flat || tone !== "default"}
+      className={className}
+      data-surface={tone === "default" ? undefined : tone}
+    >
       <div className="flex items-start justify-between" style={{ gap: "var(--space-4)" }}>
         <div className="flex flex-col" style={{ gap: "var(--space-2)" }}>
           <span
-            className="font-medium text-text-tertiary"
-            style={{ fontSize: "var(--text-xs)", letterSpacing: "0.04em", textTransform: "uppercase" }}
+            className="text-text-secondary"
+            style={{
+              fontSize: "var(--text-xs)",
+              fontWeight: "var(--weight-bold)",
+              letterSpacing: "var(--tracking-caps)",
+              textTransform: "uppercase",
+            }}
           >
             {label}
           </span>
+          {/* Heavy ink type is half the brand. Roboto 900 is downloaded and
+              this is the one place in the kit that reaches for it. */}
           <span
-            className="font-semibold text-text-primary tabular-nums"
-            style={{ fontSize: "var(--text-3xl)", lineHeight: "var(--leading-tight)" }}
+            className="text-text-primary tabular-nums"
+            style={{
+              fontSize: "var(--text-4xl)",
+              lineHeight: "var(--leading-tight)",
+              fontWeight: "var(--weight-black)",
+              letterSpacing: "var(--tracking-tight)",
+            }}
           >
             {value}
           </span>
         </div>
         {icon ? (
           <span
-            className="bg-accent-subtle text-accent-text flex shrink-0 items-center justify-center"
+            className="bg-accent text-text-on-accent border border-accent-edge flex shrink-0 items-center justify-center"
             style={{
               width: "var(--space-8)",
               height: "var(--space-8)",

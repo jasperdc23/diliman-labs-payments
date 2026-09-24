@@ -30,7 +30,7 @@
   gap: var(--space-2);
   white-space: nowrap;
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--text-secondary);
   cursor: pointer;
   transition: color var(--duration-fast) var(--ease-standard);
@@ -42,6 +42,7 @@
 
 .tab[aria-selected="true"] {
   color: var(--text-primary);
+  font-weight: var(--weight-bold);
 }
 
 .tab[disabled] {
@@ -71,19 +72,26 @@
   transition: transform var(--duration-normal) var(--ease-standard);
 }
 
+/* --accent-text, not --accent: this is a thin stroke, and raw yellow on a
+   white surface is 1.24:1. Dark mode is byte-identical, since --accent-text
+   resolves to --accent-400 there. */
 .list[data-variant="underline"] .indicator {
   bottom: -1px;
-  height: 2px;
-  background: var(--accent);
+  height: var(--rule-heavy);
+  background: var(--accent-text);
   border-radius: var(--radius-full);
 }
 
+/* The pill is a FILL, so it keeps raw --accent — but a yellow fill on a
+   light ground still needs its ink boundary. --accent-edge is transparent
+   inside either surface scope, where the fill already clears the floor. */
 .list[data-variant="pill"] .indicator {
   top: var(--space-1);
   bottom: var(--space-1);
   z-index: 0;
   background: var(--accent);
   border-radius: var(--radius-md);
+  box-shadow: inset 0 0 0 var(--rule-hairline) var(--accent-edge);
 }
 
 .panel {

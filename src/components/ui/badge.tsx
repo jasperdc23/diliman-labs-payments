@@ -23,10 +23,14 @@ const variantStyles: Record<BadgeVariant, { background: string; color: string; b
     color: "var(--text-secondary)",
     border: "var(--border-subtle)",
   },
+  // --accent-text, never --accent: raw yellow on a yellow tint measures
+  // 1.13:1. Deliberately NOT a solid yellow fill — that would land on every
+  // accent badge in /docs, and a row of them reads as a wall rather than as
+  // blocking. The filled yellow chip belongs on a specific control.
   accent: {
     background: "var(--accent-subtle)",
-    color: "var(--accent)",
-    border: "color-mix(in srgb, var(--accent) 24%, transparent)",
+    color: "var(--accent-text)",
+    border: "color-mix(in srgb, var(--accent-text) 32%, transparent)",
   },
   success: {
     background: "var(--success-subtle)",

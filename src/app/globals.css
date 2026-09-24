@@ -16,6 +16,8 @@
   --color-accent-hover: var(--accent-hover);
   --color-accent-subtle: var(--accent-subtle);
   --color-accent-text: var(--accent-text);
+  --color-text-on-accent: var(--text-on-accent);
+  --color-accent-edge: var(--accent-edge);
   --color-success: var(--success);
   --color-success-subtle: var(--success-subtle);
   --color-warning: var(--warning);
@@ -96,6 +98,32 @@ body {
 .popover-surface {
   background-color: var(--surface-raised);
   border-color: var(--border-default);
+}
+
+/* The wordmark is ink-on-transparent and vanishes on a dark ground. The
+   choice is CSS-driven rather than JS-driven because an ink sidebar in
+   LIGHT mode has no theme signal — and because it nests correctly. */
+.brand-mark-light {
+  display: none;
+}
+
+[data-theme="dark"] .brand-mark-ink,
+[data-surface="ink"] .brand-mark-ink {
+  display: none;
+}
+
+[data-theme="dark"] .brand-mark-light,
+[data-surface="ink"] .brand-mark-light {
+  display: block;
+}
+
+/* Must stay last: the yellow surface wants the INK mark back. */
+[data-surface="accent"] .brand-mark-light {
+  display: none;
+}
+
+[data-surface="accent"] .brand-mark-ink {
+  display: block;
 }
 
 /* Grain overlays the element's own box only. `border-radius: inherit`
