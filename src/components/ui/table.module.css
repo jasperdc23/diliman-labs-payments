@@ -1,7 +1,11 @@
 .wrapper {
   width: 100%;
   overflow: auto;
-  border: 1px solid var(--border-subtle);
+  /* Was a 1px border-subtle stroke around the whole panel — swapped for the
+     shadow token so the table separates from the page by depth, not a
+     drawn line. Row/header dividers below stay as hairlines: those are
+     functional (which row is which), not a panel edge. */
+  box-shadow: var(--shadow-sm);
   border-radius: var(--radius-lg);
   background: var(--surface-raised);
 }

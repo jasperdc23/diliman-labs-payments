@@ -1,0 +1,26 @@
+/*
+ * The default-tone StatCard's own texture pass. `Card` already applies
+ * `.grain` (see globals.css) to every card in the kit — this module adds
+ * only the one thing that's specific to a report/KPI figure: a soft
+ * directional wash of the brand yellow into one corner, at the same
+ * radial-gradient-fading-to-transparent shape `.photo-treatment` uses for
+ * the brand's photo vignette (globals.css), not a flat tint. Never applied
+ * to `tone="ink"`/`"accent"` — those already carry a full surface identity
+ * and a second wash on top would compete with it rather than support it.
+ */
+.gradient {
+  position: relative;
+}
+
+.gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: radial-gradient(
+    130% 130% at 100% 0%,
+    color-mix(in srgb, var(--accent) 14%, transparent) 0%,
+    transparent 60%
+  );
+}

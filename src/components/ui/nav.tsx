@@ -35,7 +35,7 @@ export function Nav() {
     <div className="sticky top-0 z-50 w-full">
       <div className="glass flex items-center justify-between border-b px-4 py-3 sm:px-6 lg:px-8 xl:px-16">
         <Link href="/" aria-label="Diliman Labs home" className="flex items-center">
-          <BrandMark height={20} />
+          <BrandMark height={28} />
         </Link>
 
         <nav className="hidden items-center gap-6 sm:flex" aria-label="Primary">

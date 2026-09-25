@@ -1,0 +1,691 @@
+/*
+ * Ops Console — variant-local styling.
+ *
+ * Everything here is either a state the shared components can't express
+ * (a clickable ledger row, a flagged row's ink-edged yellow marker) or a
+ * layout the console owns. No raw values: every declaration reads a token
+ * from src/styles/tokens.css.
+ */
+
+/* ---------------------------------------------------------------------
+   Shell
+   --------------------------------------------------------------------- */
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  /* One step softer than the base kit, scoped to the console only (the
+     marketing page keeps the base scale). Every card/button/input/nav item
+     below reads this through the token it already consumes — nothing here
+     is hardcoded per component. Brand-blocking elements (the yellow rule,
+     the flagged-row edge, the accent band's own fill) carry no radius of
+     their own and are untouched by this cascade. */
+  --radius-md: var(--radius-lg);
+  --radius-lg: var(--radius-xl);
+  /* Runs once on mount — i.e. arriving at the console, whether that's
+     straight after login or a hard refresh. Not per-section: swapping nav
+     items re-renders .main's children, not .shell, so this never replays
+     while someone's just clicking around. globals.css' reduced-motion
+     block collapses the duration to ~0 for anyone who's asked for that. */
+  animation: dashboardEnter calc(var(--duration-normal) * 2) var(--ease-out) both;
+}
+
+@keyframes dashboardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Light-theme sidebar: a light surface with just a hairline edge, not a
+   forced ink scope — dark theme is left to inherit the page's own
+   [data-theme="dark"] surface tokens (already dark) rather than the
+   separate ink-scope treatment, so it isn't "ink" twice over. */
+.sidebar {
+  display: none;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 15.5rem;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-4);
+  background: var(--surface-sunken);
+  border-right: var(--rule-hairline) solid var(--border-subtle);
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    display: flex;
+    /* Stays put while the section content scrolls. `align-self` has to
+       come off `stretch` first — a flex item stretched to the full height
+       of .shell has nothing left to stick within. Scrolls internally if
+       its own content is ever taller than the viewport. */
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  /* Roomier than the base kit's control padding — this is a persistent
+     one-level nav with six rows, not a dense list, so each row can afford
+     to read as its own tap target rather than packed against its
+     neighbors. */
+  padding: var(--space-3) var(--space-4);
+  border: var(--rule-hairline) solid transparent;
+  border-radius: var(--radius-md);
+  text-align: left;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.navItem:hover {
+  /* Not --surface-sunken: the sidebar itself sits on --surface-sunken in
+     light theme now that it's no longer a forced ink scope, so a hover
+     state in that same tone would be invisible against it. --surface-raised
+     is the lighter step up in both themes. */
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+/* The nav pill is the one place yellow fills inside the ink chrome. Border
+   stays transparent (kept, not removed, so the row doesn't shift by a
+   hairline against its unselected neighbors) — the fill alone carries the
+   selected state. */
+.navItem[aria-current="page"] {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--text-on-accent);
+  font-weight: var(--weight-bold);
+}
+
+.navItem[aria-current="page"]:hover {
+  background: var(--accent-hover);
+  color: var(--text-on-accent);
+}
+
+.navCount {
+  margin-left: auto;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-wide);
+  color: inherit;
+  opacity: 0.7;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  /* Frosted glass, not a flat surface with a hard rule underneath — same
+     treatment as the marketing Nav's `.glass` utility (globals.css), so the
+     topbar reads as "above" the scrolled content rather than boxed off by a
+     heavy stroke. --glass-bg is already tuned opaque enough that text never
+     fights what's behind it. */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: var(--rule-hairline) solid var(--glass-border);
+}
+
+@media (min-width: 768px) {
+  .topbar {
+    padding: var(--space-3) var(--space-6);
+  }
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: var(--radius-md);
+  border: var(--rule-hairline) solid var(--border-default);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.iconButton:hover {
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface-sunken);
+  border-bottom: var(--rule-hairline) solid var(--border-subtle);
+}
+
+@media (min-width: 1024px) {
+  .mobileNav {
+    display: none;
+  }
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--space-8);
+  padding: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .main {
+    padding: var(--space-8);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Brand marks
+   --------------------------------------------------------------------- */
+
+/* The yellow blocking rule under the wordmark. Solid fill, so it carries
+   its ink edge for the light canvas; inside the ink sidebar the edge
+   resolves to transparent on its own. */
+.brandRule {
+  height: var(--rule-block);
+  width: var(--space-8);
+  background: var(--accent);
+  box-shadow: inset 0 0 0 var(--rule-hairline) var(--accent-edge);
+}
+
+.eyebrow {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.sectionTitle {
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+/* The console's single full-bleed yellow block per screen.
+   The ink edge lives on the FRAME, not on the block: --accent-edge
+   resolves to transparent inside data-surface="accent", so an edge
+   written on the scoped element itself would switch itself off exactly
+   where a yellow fill on a light canvas needs it. The frame sits outside
+   the scope, reads :root's --accent-edge (ink in light, transparent in
+   dark) and gets it right in both themes. */
+.accentFrame {
+  /* No stroke — the yellow fill against the page background is already
+     the separation; a rounded shadow reads as "raised", not "outlined". */
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+/* An even grid instead of a left-packed flex row — the old layout left
+   most of the yellow band empty past the fifth figure on anything wider
+   than a laptop. Two columns until there's room for all five, then one
+   row that actually uses the width it's filling. Gross volume (always
+   first — see transactions.tsx) reads bigger, since it's the number the
+   other four qualify rather than a sixth equal figure. */
+.accentBand {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6) var(--space-4);
+  padding: var(--space-6);
+  background: var(--surface);
+}
+
+@media (min-width: 640px) {
+  .accentBand {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--space-4) var(--space-6);
+  }
+}
+
+.accentPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--surface);
+}
+
+.bandFigure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Dividers only make sense once every figure sits in the same row (the
+   five-column layout) — on the two-column grid a left border on the
+   third item would dangle at the start of a new row for no reason. */
+@media (min-width: 640px) {
+  .bandFigure:not(:first-child) {
+    padding-left: var(--space-6);
+    /* --accent-edge resolves transparent inside data-surface="accent"
+       (this band's own scope) — it's meant for a fill's outer edge, not
+       an internal divider, so --border-subtle carries this instead. */
+    border-left: var(--rule-hairline) solid var(--border-subtle);
+  }
+}
+
+.bandValue {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.bandFigure:first-child .bandValue {
+  font-size: var(--text-3xl);
+}
+
+/* ---------------------------------------------------------------------
+   Ledger table
+   --------------------------------------------------------------------- */
+
+.ledgerWrapper {
+  width: 100%;
+  overflow-x: auto;
+  /* Panel edge, not a row divider — box-shadow instead of a drawn stroke,
+     same treatment as the shared Table component's .wrapper. */
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.ledger {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+}
+
+.ledger thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface-sunken);
+  border-bottom: var(--rule-medium) solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.ledger[data-density="comfortable"] th,
+.ledger[data-density="comfortable"] td {
+  padding: var(--space-3) var(--space-4);
+}
+
+.ledger[data-density="compact"] th,
+.ledger[data-density="compact"] td {
+  padding: var(--space-2) var(--space-3);
+}
+
+.ledger td {
+  border-bottom: var(--rule-hairline) solid var(--border-subtle);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.ledger tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.zebra tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--surface-sunken) 55%, transparent);
+}
+
+.row {
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.row:hover td {
+  background: var(--surface-sunken);
+}
+
+.row[data-selected="true"] td {
+  background: var(--accent-subtle);
+}
+
+/* Flagged rows get a yellow block in the gutter rather than a tint, so a
+   flag stays readable on top of selection and zebra both. */
+.row[data-flagged="true"] td:first-child {
+  box-shadow: inset var(--rule-block) 0 0 0 var(--accent);
+}
+
+.row[data-pending="true"] td {
+  opacity: 0.6;
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: 100%;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.sortButton:hover {
+  color: var(--text-primary);
+}
+
+.sortButton[data-active="true"] {
+  color: var(--text-primary);
+}
+
+.sortIcon {
+  color: var(--text-tertiary);
+  display: inline-flex;
+}
+
+.sortButton[data-active="true"] .sortIcon {
+  color: var(--accent-text);
+}
+
+.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.numeric .sortButton {
+  justify-content: flex-end;
+}
+
+.center {
+  text-align: center;
+}
+
+.center .sortButton {
+  justify-content: center;
+}
+
+/* The real control on a clickable row: a row's worth of hit area belongs
+   to the mouse, but the keyboard needs a button it can reach and press. */
+.openButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--text-primary);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.openButton:hover {
+  color: var(--accent-text);
+}
+
+.checkCell {
+  width: var(--space-8);
+}
+
+/* Secondary columns are dropped below 768px rather than left to a
+   horizontal scroll — a phone gets the four columns that answer "what
+   happened", and the rest arrive in the detail sheet. */
+.hideSm {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hideSm {
+    display: table-cell;
+  }
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------
+   Timeline
+   --------------------------------------------------------------------- */
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timelineItem {
+  position: relative;
+  display: flex;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+}
+
+.timelineItem:last-child {
+  padding-bottom: 0;
+}
+
+/* The connecting rail. A pseudo-element, so it never lands on the last
+   step and no extra DOM is needed per event. */
+.timelineItem:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--space-2) / 2 + var(--rule-medium));
+  top: var(--space-4);
+  bottom: 0;
+  width: var(--rule-medium);
+  background: var(--border-subtle);
+}
+
+.timelineDot {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  margin-top: var(--space-1);
+  width: var(--space-3);
+  height: var(--space-3);
+  border-radius: var(--radius-full);
+  background: var(--text-tertiary);
+  box-shadow: 0 0 0 var(--rule-hairline) var(--surface-raised);
+}
+
+.timelineDot[data-state="done"] {
+  background: var(--success);
+}
+
+.timelineDot[data-state="current"] {
+  background: var(--accent);
+  box-shadow: inset 0 0 0 var(--rule-hairline) var(--accent-edge);
+}
+
+.timelineDot[data-state="warning"] {
+  background: var(--warning);
+}
+
+.timelineDot[data-state="failed"] {
+  background: var(--danger);
+}
+
+/* ---------------------------------------------------------------------
+   Misc
+   --------------------------------------------------------------------- */
+
+.railRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-3);
+  /* Card-like clickable row — shadow instead of a drawn stroke, same
+     reasoning as Card's own edge. */
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.railRow:hover {
+  background: var(--surface-sunken);
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ---------------------------------------------------------------------
+   Channels
+   --------------------------------------------------------------------- */
+
+.channelCard {
+  height: 100%;
+}
+
+.channelIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+}
+
+.linkButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 0;
+  padding: 0;
+  background: none;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--accent-text);
+  cursor: pointer;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.linkButton:hover {
+  opacity: 0.75;
+}
+
+.settingRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: var(--rule-hairline) solid var(--border-subtle);
+}
+
+.settingRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.settingLabel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 14rem;
+  flex: 1;
+}
+
+.settingName {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.settingHelp {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--text-tertiary);
+  max-width: 48ch;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3) var(--space-4);
+}
+
+@media (min-width: 480px) {
+  .detailGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.detailTerm {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.detailValue {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}

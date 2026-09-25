@@ -23,6 +23,27 @@ surface (~1.3:1 against white). So `--accent` is for filled backgrounds, and
 or a hairline — it darkens the same hue in light mode and resolves back to pure
 yellow in dark mode.
 
+## Auth (prototype)
+
+`/dashboard` is gated by a hand-rolled, prototype-grade session — no auth library, no
+database. `src/proxy.ts` (Next 16's renamed `middleware.ts`) redirects unauthenticated
+requests to `/login` and signed-in requests away from `/login`, reading a session cookie
+signed with HMAC-SHA256 (`src/lib/auth/session.ts`, Node's built-in `crypto`). This is
+enough to demonstrate real route protection; it is not a production auth system (single
+hardcoded demo user, no password hashing, no revocation).
+
+**Demo login:**
+
+| Field    | Value                                                    |
+| -------- | --------------------------------------------------------- |
+| Email    | `demo@dilimanlabs.ph`                                      |
+| Password | `DilimanLabs!2026`                                         |
+
+Override both via `DEMO_USER_EMAIL` / `DEMO_USER_PASSWORD` env vars in any shared
+environment. Set `SESSION_SECRET` too — without it, `src/lib/auth/session.ts` falls back
+to a clearly-marked dev-only secret and logs a warning on every server start; that fallback
+is fine for `next dev` on a laptop and not fine anywhere else.
+
 ## Run it
 
 ```bash

@@ -17,7 +17,7 @@ export default function LoginPage() {
 
       <div className="flex w-full max-w-sm flex-col gap-8">
         <div className="flex flex-col items-center gap-4 text-center">
-          <BrandMark height={28} />
+          <BrandMark height={40} />
           <div className="flex flex-col gap-1">
             <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
               Welcome back

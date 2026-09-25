@@ -1,0 +1,1166 @@
+/*
+ * Styles for the hosted checkout surface. This is a separate, unauthenticated
+ * product surface from the Ops Console — it reuses the same token layer
+ * (tokens.css) but its own layout, since a single-column, merchant-branded
+ * checkout has nothing in common with the dashboard's sidebar shell.
+ *
+ * White-label rule: nothing here hardcodes Diliman Labs identity as the
+ * dominant visual — no full-bleed accent band, no ink surface, no grain
+ * photo treatment. The merchant name is the only thing rendered large;
+ * --accent/--accent-text are used sparingly, the way Stripe Checkout uses a
+ * single brand color for its primary button and progress dots.
+ *
+ * Layout: below 1024px (this kit's established `lg` breakpoint — see
+ * dashboard/ops.module.css's `.sidebar`/`.mobileNav` pair) this is a single
+ * stacked column, unchanged from the original shape. At 1024px and up it
+ * becomes a two-pane shell — a persistent left "order" pane and a scrollable
+ * right pane for the step content — the same shape Stripe/PayMongo hosted
+ * checkout use. Both layouts share one DOM: the mobile header block and the
+ * desktop aside are each authored once and toggled with `display` at the
+ * breakpoint (the same technique the dashboard sidebar/mobile-nav pair
+ * uses), so there's no client-side layout branching or hydration risk.
+ */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Plain surface, not the marketing mesh wash — a payment page reads as
+     trustworthy when it's flat and quiet. The tint lives only on the
+     summary half below. */
+  background: var(--surface);
+}
+
+.layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* True 50/50 split at desktop, with BOTH halves' content pulled toward the
+   centre gutter (summary right-aligned in its half, form left-aligned in
+   its own). That's what makes a hosted checkout read as one balanced,
+   centred composition instead of content bunched against one edge with a
+   dead pane opposite it. */
+@media (min-width: 1024px) {
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+}
+
+/* --------------------------------------------------------------------- */
+/* Left pane — desktop only (order identity, persistent across steps)    */
+/* --------------------------------------------------------------------- */
+
+.aside {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .aside {
+    /* Paints the full left half; the content inside is capped and pushed
+       to the half's right edge so it sits against the centre gutter. */
+    display: flex;
+    justify-content: flex-end;
+    /* NB: the space scale has no --space-10 (it steps 8 → 12); an
+       undefined var() here would void the whole shorthand to 0. */
+    padding: var(--space-12) var(--space-8) var(--space-12) var(--space-12);
+    /* Restrained neutral surface, not a brand-dominant block — this is
+       white-label, so the merchant's own identity (name, amount) is what
+       reads large here, not Diliman Labs'. */
+    background: var(--surface-sunken);
+    border-right: 1px solid var(--border-subtle);
+    /* Fills the viewport and scrolls internally when its own content is
+       taller: a sticky element taller than the scrollport gets its BOTTOM
+       pinned instead of its top, which silently clipped the merchant name
+       off the top of the pane on shorter windows. */
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+.asideInner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  width: 100%;
+  /* Scales with the viewport instead of stopping at a fixed cap — a fixed
+     24rem left the pane's outer two-thirds empty on anything wider than a
+     laptop, which read as "content stuck in the middle" rather than a
+     layout actually using a big screen. */
+  max-width: clamp(24rem, 34vw, 34rem);
+}
+
+/* Amount is the hero of this pane: label above it, what it's for below it,
+   so the eye lands on the number first and gets its context second. */
+.asideAmountBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.asideDescription {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+.asideAmountLabel {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+.asideAmount {
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-black);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
+}
+
+.asideDivider {
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+/* Subtotal / fee / total — makes the headline amount above accountable
+   instead of just asserted. */
+.breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.breakdownRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.breakdownRow dd {
+  font-variant-numeric: tabular-nums;
+}
+
+.breakdownTotal {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-subtle);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+/* Trust copy sits at the foot of the pane, the way a payment page's
+   reassurance line does — present, but under the thing being decided. */
+.asideSecurity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-8);
+}
+
+.asideSecurityRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.asideProgress {
+  padding-top: var(--space-2);
+}
+
+/* --------------------------------------------------------------------- */
+/* Right pane — step content                                             */
+/* --------------------------------------------------------------------- */
+
+.mainColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-6) var(--space-6) var(--space-16);
+  gap: var(--space-6);
+}
+
+@media (min-width: 1024px) {
+  .mainColumn {
+    /* Mirror of .aside: content capped and pushed to this half's LEFT
+       edge, so the form sits against the same centre gutter the summary
+       ends at. The two together read as one centred block. */
+    align-items: flex-start;
+    padding: var(--space-12) var(--space-12) var(--space-16) var(--space-8);
+  }
+}
+
+.mainContent {
+  width: 100%;
+  /* Same reasoning as .asideInner — fluid, not a fixed cap, so the form
+     side actually widens on a big screen instead of leaving a dead margin
+     between the field labels and the pane's own edge. */
+  max-width: clamp(26rem, 36vw, 36rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* Mobile/compact header block: merchant name + order summary + horizontal
+   progress, stacked above the step card. Hidden once the two-pane desktop
+   layout takes over (the aside carries this content there instead). */
+.mobileHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .mobileHeader {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------- */
+/* Merchant header + order summary                                       */
+/* --------------------------------------------------------------------- */
+
+.merchantHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.merchantName {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+.merchantEyebrow {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+.summaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  padding: var(--space-4) var(--space-6);
+}
+
+.summaryTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.summaryDescription {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.summaryAmount {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------- */
+/* Step progress                                                         */
+/* --------------------------------------------------------------------- */
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.progressStep {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+}
+
+.progressDot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  border: 1px solid var(--border-default);
+  background: var(--surface);
+  color: var(--text-tertiary);
+  transition: background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.progressStep[data-state="current"] .progressDot {
+  border-color: var(--accent-edge);
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.progressStep[data-state="done"] .progressDot {
+  border-color: color-mix(in srgb, var(--accent-text) 40%, transparent);
+  background: var(--accent-subtle);
+  color: var(--accent-text);
+}
+
+.progressLabel {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+.progressStep[data-state="current"] .progressLabel {
+  color: var(--text-primary);
+  opacity: 1;
+}
+
+.progressLine {
+  height: 1px;
+  flex: 1;
+  background: var(--border-default);
+  margin: 0 var(--space-1);
+}
+
+.progressLine[data-done="true"] {
+  background: color-mix(in srgb, var(--accent-text) 50%, transparent);
+}
+
+/* Vertical variant — used in the desktop left pane (.asideProgress). Same
+   STEPS/state logic as the horizontal list in step-progress.tsx, just laid
+   out as a dot-and-connector column with the label beside each dot instead
+   of below it. */
+.progressVertical {
+  display: flex;
+  flex-direction: column;
+}
+
+.progressStepVertical {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.progressDotColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.progressLineVertical {
+  width: 1px;
+  flex: 1;
+  min-height: var(--space-6);
+  background: var(--border-default);
+  margin: var(--space-1) 0;
+}
+
+.progressLineVertical[data-done="true"] {
+  background: color-mix(in srgb, var(--accent-text) 50%, transparent);
+}
+
+.progressStepVertical[data-state="current"] .progressDot {
+  border-color: var(--accent-edge);
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.progressStepVertical[data-state="done"] .progressDot {
+  border-color: color-mix(in srgb, var(--accent-text) 40%, transparent);
+  background: var(--accent-subtle);
+  color: var(--accent-text);
+}
+
+.progressStepVertical > span:last-child {
+  padding-top: var(--space-1);
+}
+
+.progressLabelVertical {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-tertiary);
+}
+
+.progressStepVertical[data-state="current"] .progressLabelVertical {
+  color: var(--text-primary);
+  font-weight: var(--weight-bold);
+}
+
+.progressStepVertical[data-state="done"] .progressLabelVertical {
+  color: var(--text-secondary);
+}
+
+/* The "what happens on this step" caption — only rendered for the current
+   step (see step-progress.tsx), so the tracker doubles as instructions
+   instead of just a numbered checklist. */
+.progressHint {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  opacity: 0.7;
+  margin-top: var(--space-1);
+}
+
+/* --------------------------------------------------------------------- */
+/* Step shell                                                            */
+/* --------------------------------------------------------------------- */
+
+/* Flat, not a nested card. A hosted checkout's form sits directly on the
+   page the way Stripe's and PayMongo's do — a bordered box floating inside
+   an already-panelled layout is the thing that makes a payment page read as
+   a cheap embed rather than the merchant's own checkout. */
+.stepCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+@media (min-width: 1024px) {
+  .stepCard {
+    gap: var(--space-8);
+  }
+}
+
+.stepHeading {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+.groupLabel {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+/* --------------------------------------------------------------------- */
+/* Payment method tiles                                                  */
+/* --------------------------------------------------------------------- */
+
+/* One method per row, full width. A two-up grid of eleven small tiles was
+   the "lacks padding" problem — a single scannable column with a real
+   radio on each row is how every payment page a customer already trusts
+   presents this. */
+.tileGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* No stroke. These rows sit on the category card's sunken fill, so a
+   plain surface fill is all the separation they need — a border here just
+   added a hard line inside an already-bounded group. */
+.tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 0;
+  background: var(--surface);
+  padding: var(--space-4) var(--space-6);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.tile:hover {
+  background: color-mix(in srgb, var(--accent-subtle) 45%, var(--surface));
+}
+
+/* Solid brand yellow with ink type — the same treatment the Ops Console's
+   active nav item uses. A subtle tint wasn't separating enough from the
+   white unselected rows beside it to answer "which one did I pick". */
+.tile[data-selected="true"] {
+  background: var(--accent);
+}
+
+.tile[data-selected="true"] .tileName {
+  color: var(--text-on-accent);
+}
+
+/* Explicit selected-state affordance. A tint plus a border shift alone
+   reads as ambiguous on a page where the stakes are "did my payment
+   method actually register" — a filled radio removes the doubt. */
+/* The one stroke kept on purpose: a radio with no outline is just an
+   invisible circle, and "did my payment method register" is the single
+   thing on this screen that must never be ambiguous. */
+.tileRadio {
+  margin-left: auto;
+  flex-shrink: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+/* Inverts on the selected row: the row is now solid yellow, so a yellow
+   radio would vanish into it. Ink fill, yellow dot. */
+.tile[data-selected="true"] .tileRadio {
+  border-color: var(--gray-950);
+  background: var(--gray-950);
+}
+
+.tileRadioDot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+}
+
+.tileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.tile:has(.tileInput:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.tileName {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
+/* --------------------------------------------------------------------- */
+/* Category cards                                                        */
+/* --------------------------------------------------------------------- */
+
+/* Each payment category is a card that shows what's inside it even when
+   it's closed — the brand chips and names are the preview. A plain
+   accordion hid the channels entirely, which made the customer guess
+   whether their wallet was even accepted before clicking. */
+.categoryList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  /* A <fieldset> carries `min-inline-size: min-content` from the UA
+     stylesheet, so it refuses to shrink below its widest row and
+     overflowed the right gutter on narrow screens. */
+  min-width: 0;
+  width: 100%;
+}
+
+/* No stroke anywhere: the card separates from the white page by fill
+   alone (--surface-sunken), and the rows inside separate from the card by
+   inverting that (white on grey). Layered fills, not outlines. */
+.categoryCard {
+  border-radius: var(--radius-xl);
+  border: 0;
+  background: var(--surface-sunken);
+  overflow: hidden;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+/* Deliberately NOT tinted yellow when it holds the selection: a pale
+   yellow card behind a pale yellow selected row made the two nearly the
+   same value, so the active row stopped reading as active. The card stays
+   neutral and the yellow is spent entirely on the row itself — the header
+   icon chip below is what marks which category owns the selection. */
+
+.categoryHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-4);
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Tighter once the body is showing — the header stops being the whole
+   card and becomes its title. */
+.categoryCard[data-open="true"] .categoryHeader {
+  padding-bottom: var(--space-3);
+}
+
+/* Header and body share one horizontal inset so the rows line up with the
+   header's icon instead of sitting 8px wider than it. */
+@media (min-width: 640px) {
+  .categoryHeader {
+    padding: var(--space-6);
+  }
+
+  .categoryCard[data-open="true"] .categoryHeader {
+    padding-bottom: var(--space-4);
+  }
+}
+
+.categoryIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text-secondary);
+}
+
+.categoryCard[data-selected="true"] .categoryIcon {
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+/* Takes the free space itself rather than letting the badges' auto margin
+   do it — otherwise hiding the badges on expand drags the caret inward. */
+.categoryText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.categoryName {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+}
+
+/* The "what's inside" line — the whole point of this card over a bare
+   accordion header. */
+.categoryPreview {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  opacity: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.categoryBadges {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  margin-right: var(--space-2);
+}
+
+/* Below the two-pane breakpoint the names line already carries the
+   preview; the chips would push the caret off a narrow screen. */
+@media (max-width: 480px) {
+  .categoryBadges {
+    display: none;
+  }
+}
+
+.categoryCaret {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.categoryCard[data-open="true"] .categoryCaret {
+  transform: rotate(180deg);
+}
+
+.categoryCard[data-open="true"] .categoryBadges {
+  display: none;
+}
+
+.categoryBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .categoryBody {
+    padding: 0 var(--space-6) var(--space-6);
+  }
+}
+
+
+/* Neutral stand-in badge for the merged Card row — it represents both
+   networks at once, so it can't be either brand's own color. */
+.channelBadgeFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+}
+
+/* The small "which networks does this take" badges shown beside the
+   merged Card row's label. */
+.tileAccepted {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: var(--space-2);
+}
+
+/* Inline card-number/expiry/cvv/name form, revealed under the Card row the
+   moment it's selected — the same place a real hosted checkout collects
+   this, not a separate step. */
+/* --------------------------------------------------------------------- */
+/* Field validation feedback                                             */
+/* --------------------------------------------------------------------- */
+
+.fieldCheck {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--success);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  animation: fieldCheckIn var(--duration-normal) var(--ease-out) both;
+}
+
+.fieldCheckLabel {
+  line-height: 1;
+}
+
+/* Card number's trailing slot holds two things at once — the detected
+   network chip and the validity tick. */
+.fieldTrailing {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+@keyframes fieldCheckIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Whole-form confirmation, shown once every field in the group passes. */
+.formVerified {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--success-subtle);
+  color: var(--success);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  animation: fieldCheckIn var(--duration-normal) var(--ease-out) both;
+}
+
+/* Sits on the category card's own sunken fill, so it needs no second fill
+   or stroke of its own — white fields on grey is the whole separation. */
+.cardForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-2) var(--space-2);
+}
+
+.cardFormRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+/* --------------------------------------------------------------------- */
+/* Channel badges — see channel-badge.tsx for the per-channel color/kind  */
+/* mapping. Styling here is only shape/type; every fill color is set      */
+/* inline per channel since it isn't a reusable design-system decision.   */
+/* --------------------------------------------------------------------- */
+
+.channelBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-md);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.mastercardBadge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-default);
+}
+
+.mcCircle {
+  position: absolute;
+  width: 60%;
+  height: 60%;
+  border-radius: var(--radius-full);
+}
+
+.mcCircle:first-child {
+  left: 14%;
+}
+
+.mcCircle:last-child {
+  right: 14%;
+}
+
+/* --------------------------------------------------------------------- */
+/* Security cue + footer                                                 */
+/* --------------------------------------------------------------------- */
+
+.securityCue {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--text-tertiary);
+  opacity: 0.6;
+}
+
+/* Theme switch, floated in the bottom-right corner. Fixed rather than in
+   flow so it's reachable at any scroll position, and out of the way of
+   the form column, which is anchored to the centre gutter well clear of
+   this corner. */
+.themeCorner {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 var(--space-6) var(--space-8);
+}
+
+@media (min-width: 1024px) {
+  .themeCorner {
+    position: fixed;
+    right: var(--space-6);
+    bottom: var(--space-6);
+    z-index: 50;
+    padding: 0;
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* --------------------------------------------------------------------- */
+/* Prototype test control                                                */
+/* --------------------------------------------------------------------- */
+
+.prototypeAside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-strong);
+  background: var(--surface-sunken);
+  padding: var(--space-4);
+}
+
+.prototypeLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.outcomeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: var(--space-2);
+}
+
+.outcomeOption {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--surface);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.outcomeOption[data-selected="true"] {
+  border-color: var(--accent-edge);
+  background: var(--accent-subtle);
+  color: var(--text-primary);
+}
+
+.outcomeOption input {
+  accent-color: var(--accent-text);
+}
+
+/* --------------------------------------------------------------------- */
+/* Processing state                                                      */
+/* --------------------------------------------------------------------- */
+
+.processing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+  padding: var(--space-8) var(--space-4);
+}
+
+.processingTitle {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
+/* --------------------------------------------------------------------- */
+/* Status screen                                                         */
+/* --------------------------------------------------------------------- */
+
+/* Flat, same reasoning as .stepCard — an outcome screen reading as its own
+   boxed widget floating on the page is what made it feel bolted-on rather
+   than like the natural conclusion of the page the customer's been on the
+   whole time. */
+.statusCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4) 0;
+}
+
+.statusIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-full);
+}
+
+.statusIcon[data-variant="success"] {
+  background: var(--success-subtle);
+  color: var(--success);
+}
+
+.statusIcon[data-variant="danger"] {
+  background: var(--danger-subtle);
+  color: var(--danger);
+}
+
+.statusIcon[data-variant="warning"] {
+  background: color-mix(in srgb, var(--warning) 16%, var(--surface));
+  color: var(--warning);
+}
+
+.statusIcon[data-variant="neutral"] {
+  background: var(--surface-sunken);
+  color: var(--text-tertiary);
+}
+
+.statusTitle {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-black);
+  color: var(--text-primary);
+}
+
+.statusMessage {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  max-width: 26rem;
+}
+
+.statusDetails {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--space-2);
+  padding-top: var(--space-4);
+  text-align: left;
+}
+
+.statusDetailRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.statusDetailLabel {
+  color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+.statusDetailValue {
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.statusDetailChannel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+/* --------------------------------------------------------------------- */
+/* Demo picker (checkout/page.tsx)                                       */
+/* --------------------------------------------------------------------- */
+
+.demoCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  padding: var(--space-6);
+  transition: border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.demoCard:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-sunken);
+}
+
+/* Merchant initial — gives each row a fixed visual anchor on the left so
+   the list scans as a set of merchants rather than a wall of text. */
+.demoAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
+  font-size: var(--text-base);
+  font-weight: var(--weight-black);
+  color: var(--text-secondary);
+}
+
+.demoCard:hover .demoAvatar {
+  background: var(--surface-raised);
+}
+
+.demoBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.demoName {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
+.demoMeta {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--text-tertiary);
+  opacity: 0.6;
+}
+
+.demoTrailing {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.demoAmount {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

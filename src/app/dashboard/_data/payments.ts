@@ -98,6 +98,19 @@ export function formatCount(value: number): string {
   return new Intl.NumberFormat("en-PH").format(value);
 }
 
+/**
+ * `TXN-••80` — for an at-a-glance list where the full reference isn't
+ * needed to act (the row opens the full record on click). Keeps the
+ * prefix so the rail/kind is still readable and the last two characters so
+ * a reader can still spot a specific row they already know, without the
+ * full number sitting in a shared queue view.
+ */
+export function maskReference(reference: string): string {
+  const tail = reference.slice(-2);
+  const head = reference.slice(0, Math.max(0, reference.length - 2 - 2));
+  return `${head}••${tail}`;
+}
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -834,6 +847,74 @@ export function getPeriodTotalSeries(period: Period): ChartSeries {
   };
 }
 
+/** Same shape as `PeriodData`, minus `period` — a custom date range isn't one of the fixed `Period` buckets. */
+export type RangeData = Omit<PeriodData, "period">;
+
+/**
+ * Aggregates the given rows (pass the live `rows` from `OpsContext` so
+ * retries/flags are reflected) into the same shape `getPeriodData` returns,
+ * but for an arbitrary inclusive day range rather than one of the fixed
+ * `PERIOD_OPTIONS` buckets. `fromDay`/`toDay` are `YYYY-MM-DD`.
+ *
+ * The comparison window is the same number of days immediately before
+ * `fromDay`. When that window falls outside the rows passed in (as it
+ * usually will — the sample only covers `transactionDays`), the previous
+ * totals come back zero and `getDelta` already renders that as "—" rather
+ * than fabricating a percentage against nothing.
+ */
+export function getCustomRangeData(rows: Transaction[], fromDay: string, toDay: string): RangeData {
+  const dayKey = (t: Transaction) => t.date.slice(0, 10);
+  const current = rows.filter((t) => dayKey(t) >= fromDay && dayKey(t) <= toDay);
+
+  const dayCount =
+    Math.round(
+      (new Date(`${toDay}T00:00:00Z`).getTime() - new Date(`${fromDay}T00:00:00Z`).getTime()) /
+        86_400_000,
+    ) + 1;
+
+  const prevTo = new Date(`${fromDay}T00:00:00Z`);
+  prevTo.setUTCDate(prevTo.getUTCDate() - 1);
+  const prevFrom = new Date(prevTo);
+  prevFrom.setUTCDate(prevFrom.getUTCDate() - (dayCount - 1));
+  const prevFromDay = prevFrom.toISOString().slice(0, 10);
+  const prevToDay = prevTo.toISOString().slice(0, 10);
+  const previous = rows.filter((t) => dayKey(t) >= prevFromDay && dayKey(t) <= prevToDay);
+
+  const dayKeys: string[] = [];
+  const labels: string[] = [];
+  const cursor = new Date(`${fromDay}T00:00:00Z`);
+  const end = new Date(`${toDay}T00:00:00Z`);
+  while (cursor.getTime() <= end.getTime()) {
+    const key = cursor.toISOString().slice(0, 10);
+    dayKeys.push(key);
+    labels.push(formatDate(`${key}T00:00:00+08:00`));
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+
+  const series: ChartSeries[] = RAILS.map((rail) => ({
+    name: rail,
+    values: dayKeys.map((key) => getVolume(current.filter((t) => t.rail === rail && dayKey(t) === key))),
+  }));
+
+  const currentTotals = getTotals(current);
+  const previousTotals = getTotals(previous);
+
+  return {
+    label: `${formatDate(`${fromDay}T00:00:00+08:00`)} – ${formatDate(`${toDay}T00:00:00+08:00`)}`,
+    labels,
+    series,
+    totals: currentTotals,
+    previousTotals,
+    deltas: {
+      volume: getDelta(currentTotals.volume, previousTotals.volume),
+      count: getDelta(currentTotals.count, previousTotals.count),
+      net: getDelta(currentTotals.net, previousTotals.net),
+      successRate: getDelta(currentTotals.successRate, previousTotals.successRate, "percentage-point"),
+      failed: getDelta(currentTotals.failed, previousTotals.failed, "count"),
+    },
+  };
+}
+
 /**
  * Net settled per day across the last seven days, for the settlements
  * view's bar chart.
@@ -853,6 +934,85 @@ export const settlementTotals = {
   returned: 18220.75,
   batchesToday: 5,
 };
+
+// ---------------------------------------------------------------------------
+// Channels
+// ---------------------------------------------------------------------------
+
+export type ChannelType = "e-wallet" | "qr" | "card" | "bank";
+
+export const CHANNEL_TYPE_LABEL: Record<ChannelType, string> = {
+  "e-wallet": "E-wallet",
+  qr: "QR",
+  card: "Card",
+  bank: "Bank",
+};
+
+export type SettlementRail = Rail | "Card network";
+
+export type Channel = {
+  id: string;
+  name: string;
+  type: ChannelType;
+  rail: SettlementRail;
+  enabled: boolean;
+  /** This channel's estimated share of its rail's 7-day sample volume, in PHP. */
+  volumeShare: number;
+};
+
+/**
+ * Weighted deterministically against the 7-day rail totals authored above
+ * (`SERIES_BY_PERIOD["7d"]`), so a channel's "share of volume" is derived
+ * from figures already in this module rather than a separately authored
+ * constant. Card volume is clearly-synthetic prototype data — cards aren't
+ * one of the three rails this prototype otherwise tracks.
+ */
+const SEVEN_DAY_RAIL_VOLUME: Record<Rail, number> = (() => {
+  const source = SERIES_BY_PERIOD["7d"].byRail;
+  const total = (values: number[]) => round2(values.reduce((sum, v) => sum + v, 0));
+  return {
+    InstaPay: total(source.InstaPay),
+    PESONet: total(source.PESONet),
+    "QR Ph": total(source["QR Ph"]),
+  };
+})();
+
+/** [name, type, rail, enabled, weight within its rail's 7-day volume (0-1)] */
+type ChannelSeed = [string, ChannelType, SettlementRail, boolean, number];
+
+const CHANNEL_SEED: ChannelSeed[] = [
+  ["GCash", "e-wallet", "InstaPay", true, 0.52],
+  ["Maya", "e-wallet", "InstaPay", true, 0.31],
+  ["GrabPay", "e-wallet", "InstaPay", true, 0.17],
+  ["QR Ph", "qr", "QR Ph", true, 1.0],
+  ["Visa", "card", "Card network", true, 0.58],
+  ["Mastercard", "card", "Card network", true, 0.42],
+  ["BDO", "bank", "PESONet", true, 0.24],
+  ["BPI", "bank", "PESONet", true, 0.21],
+  ["UnionBank", "bank", "PESONet", true, 0.18],
+  ["Metrobank", "bank", "PESONet", true, 0.16],
+  ["RCBC", "bank", "PESONet", false, 0.12],
+  ["PNB", "bank", "PESONet", true, 0.09],
+];
+
+/** Illustrative gross weekly card volume, in PHP — cards aren't part of the rail series above, so this is clearly-synthetic prototype data rather than derived. */
+const SYNTHETIC_CARD_VOLUME = 640_000;
+
+export const channels: Channel[] = CHANNEL_SEED.map(([name, type, rail, enabled, weight], index) => ({
+  id: `chn-${String(index + 1).padStart(2, "0")}`,
+  name,
+  type,
+  rail,
+  enabled,
+  volumeShare: round2(
+    weight * (rail === "Card network" ? SYNTHETIC_CARD_VOLUME : SEVEN_DAY_RAIL_VOLUME[rail]),
+  ),
+}));
+
+/** Total 7-day volume represented across every authored channel, cards included. */
+export const channelsTotalVolume = round2(
+  channels.reduce((sum, channel) => sum + channel.volumeShare, 0),
+);
 
 // ---------------------------------------------------------------------------
 // Filtering

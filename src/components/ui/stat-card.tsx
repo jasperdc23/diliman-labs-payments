@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { TrendUp, TrendDown } from "@phosphor-icons/react/ssr";
 import { Card } from "./card";
+import styles from "./stat-card.module.css";
 
 type Direction = "up" | "down" | "flat";
 
@@ -63,7 +64,7 @@ export function StatCard({
     <Card
       interactive={interactive}
       flat={flat || tone !== "default"}
-      className={className}
+      className={`${tone === "default" ? styles.gradient : ""} ${className}`}
       data-surface={tone === "default" ? undefined : tone}
     >
       <div className="flex items-start justify-between" style={{ gap: "var(--space-4)" }}>
